@@ -1,13 +1,14 @@
 .root {
-    -fx-background-color: bisque;
+    -fx-background-color: rgb(109, 157, 216);
+
 }
 
 Button {
-    -fx-text-fill: white;
+    -fx-text-fill: rgb(0, 0, 0);
     -fx-font-family: "Arial Narrow";
     -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);
+    -fx-background-color: linear-gradient(#54c8f6, #6d44de);
+    -fx-effect: dropshadow(three-pass-box, rgba(127, 120, 120, 0.6), 5, 0.0, 0, 1);
 }
 
 Button:hover {
