@@ -24,7 +24,7 @@ public class MazeDisplayer extends Canvas {
 
     }
 
-    private void draw() {
+    public void draw() {
         double canvasHeight = getHeight();
         double canvasWidth = getWidth();
         double rows = maze.getMaze().length;

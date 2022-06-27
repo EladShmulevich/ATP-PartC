@@ -2,6 +2,7 @@ package View;
 
 import ViewModel.MyViewModel;
 import algorithms.mazeGenerators.MyMazeGenerator;
+import algorithms.search.Solution;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -16,11 +17,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
 import  java.util.ResourceBundle;
 
 
-public class MyViewController implements Initializable, IView {
+public class MyViewController implements Initializable, IView, Observer {
     //public MyMazeGenerator generator;
+
     public TextField textField_mazeRows;
     public TextField textField_mazeColumns;
     public MazeDisplayer mazeDisplayer;
@@ -29,8 +33,15 @@ public class MyViewController implements Initializable, IView {
 //    private boolean changedSettings = false;
 
 
-    public void generateMaze(ActionEvent actionEvent) {
+    public MyViewModel getMyViewModel() {
+        return myViewModel;
+    }
 
+    public void setMyViewModel(MyViewModel myViewModel) {
+        this.myViewModel = myViewModel;
+    }
+
+    public void generateMaze(ActionEvent actionEvent) {
         if (!textField_mazeRows.getText().matches("\\d*")) {
             textField_mazeRows.setText("10");
             popAlert("Error", "Numbers Only!");
@@ -51,8 +62,19 @@ public class MyViewController implements Initializable, IView {
 
         }
 
+    @Override
+    public void solveMaze() {
+        myViewModel.solveMaze();
+        showAlert("Solving maze...");
+    }
 
-        public void solveMaze (ActionEvent actionEvent){
+    @Override
+    public Solution getSolution() {
+        return myViewModel.getSolution();
+    }
+
+
+    public void solveMaze (ActionEvent actionEvent){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setContentText("Solving maze...");
             alert.show();
@@ -89,5 +111,20 @@ public class MyViewController implements Initializable, IView {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
+    }
+
+    public void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText(message);
+        alert.show();
+    }
+
+    public  void drawMaze(){
+        mazeDisplayer.draw();
     }
 }
