@@ -10,9 +10,9 @@ import algorithms.search.SearchableMaze;
 import algorithms.search.Solution;
 import Server.ServerStrategySolveSearchProblem;
 import Server.ServerStrategyGenerateMaze;
-import javafx.beans.InvalidationListener;
 import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 
 import java.util.Observable;
 
@@ -45,14 +45,13 @@ public class MyModel extends Observable implements IModel {
 
     @Override
     public void startServers() {
-        this.mazeGeneratingServer = new Server(5400,1000, new ServerStrategyGenerateMaze());
-        this.solveServer = new Server(5401,1000,new ServerStrategySolveSearchProblem());
+        this.mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
+        this.solveServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
         this.mazeGeneratingServer.start();
         this.solveServer.start();
         this.serverRunning = true;
     }
 
-    @Override
     public void stopServers() {
         this.mazeGeneratingServer.stop();
         this.solveServer.stop();
@@ -83,7 +82,7 @@ public class MyModel extends Observable implements IModel {
                         toServer.flush();
                         byte[] compressedMaze = (byte[]) fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
                         InputStream is = new MyDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
-                        byte[] decompressedMaze = new byte[rows*cols + 10000 /*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed maze -
+                        byte[] decompressedMaze = new byte[rows * cols + 12 /*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed maze -
                         is.read(decompressedMaze); //Fill decompressedMaze with bytes
                         maze = new Maze(decompressedMaze);
                         setPlayerPosition(maze.getStartPosition());
@@ -116,20 +115,20 @@ public class MyModel extends Observable implements IModel {
                     this.setPlayerPosition(new Position(currentRow - 1, currentCol));
                 }
                 break;
-                //DOWN
+            //DOWN
             case 2:
                 if (currentRow + 1 < totalRows && this.maze.getMaze()[currentRow + 1][currentCol] != 1) {
                     this.setPlayerPosition(new Position(currentRow + 1, currentCol));
                 }
 
                 break;
-                //RIGHT
+            //RIGHT
             case 3:
                 if (currentCol + 1 < totalCols && this.maze.getMaze()[currentRow][currentCol + 1] != 1) {
                     this.setPlayerPosition(new Position(currentRow, currentCol + 1));
                 }
                 break;
-                //LEFT
+            //LEFT
             case 4:
                 if (currentCol - 1 >= 0 && this.maze.getMaze()[currentRow][currentCol - 1] != 1) {
                     this.setPlayerPosition(new Position(currentRow, currentCol - 1));
@@ -137,23 +136,23 @@ public class MyModel extends Observable implements IModel {
                 break;
             case 5: //UP-Right
                 if (isDiagonalAccessible(currentRow, currentCol, totalRows, totalCols, 5)) {
-                    this.setPlayerPosition(new Position(currentRow-1, currentCol + 1));
+                    this.setPlayerPosition(new Position(currentRow - 1, currentCol + 1));
                 }
                 break;
             case 6: //UP-LEFT
                 if (isDiagonalAccessible(currentRow, currentCol, totalRows, totalCols, 6)) {
-                    this.setPlayerPosition(new Position(currentRow-1, currentCol - 1));
+                    this.setPlayerPosition(new Position(currentRow - 1, currentCol - 1));
                 }
                 break;
             case 7: //DOWN-RIGHT
                 if (isDiagonalAccessible(currentRow, currentCol, totalRows, totalCols, 7)) {
-                    this.setPlayerPosition(new Position(currentRow+1, currentCol + 1));
+                    this.setPlayerPosition(new Position(currentRow + 1, currentCol + 1));
                 }
                 break;
 
             case 8://Down-left
                 if (isDiagonalAccessible(currentRow, currentCol, totalRows, totalCols, 8)) {
-                    this.setPlayerPosition(new Position(currentRow+1, currentCol - 1));
+                    this.setPlayerPosition(new Position(currentRow + 1, currentCol - 1));
                 }
                 break;
         }
@@ -168,7 +167,7 @@ public class MyModel extends Observable implements IModel {
 
                 break;
             case 6: //UP-LEFT
-                if(currRow - 1 >= 0 && currCol - 1 >= 0 && maze.getMaze()[currRow - 1][currCol - 1] != 1) {
+                if (currRow - 1 >= 0 && currCol - 1 >= 0 && maze.getMaze()[currRow - 1][currCol - 1] != 1) {
                     return true;
                 }
                 break;
@@ -185,50 +184,50 @@ public class MyModel extends Observable implements IModel {
                 break;
         }
         return false;
-}
+    }
 
     @Override
     public void updatePlayerPositionMouse(MouseEvent mouseEvent, double mouseX, double mouseY, double cellHeight, double cellWidth) {
-        if(this.maze != null){
+        if (this.maze != null) {
             //DOWN
-            if(mouseEvent.getY() > mouseY && Math.abs(mouseEvent.getY() - mouseY) >= cellHeight){
-
+            if (mouseEvent.getY() > mouseY && Math.abs(mouseEvent.getY() - mouseY) >= cellHeight) {
                 //DOWN-RIGHT
-                if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth){
-                    direction = MovementDirection.DOWN_RIGHT;
-                    updatePlayerLocation(direction);
-                    return;
+                if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+                    updatePlayerPositionKey(7);
                 }
-
                 //DOWN-LEFT
-                else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth){
-                    direction = MovementDirection.DOWN_LEFT;
-                    updatePlayerLocation(direction);
-                    return;
+                else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+                    updatePlayerPositionKey(8);
                 }
-
                 //DOWN
-                else{
-                    direction = MovementDirection.DOWN;
-                    updatePlayerLocation(direction);
-                    return;
+                else {
+                    updatePlayerPositionKey(2);
+                }
+                return;
+            }
+            //Checks RIGHT/LEFT
+            else {
+                if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+                    updatePlayerPositionKey(3);
+                } else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+                    updatePlayerPositionKey(4);
                 }
             }
+        }
+        //Checks UP
+        else if (mouseEvent.getY() < mouseY && Math.abs(mouseEvent.getY() - mouseY) >= cellHeight) {
 
-
-
-            //Checks RIGHT/LEFT
-            else{
-                if(mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth){
-                    direction = MovementDirection.RIGHT;
-                    updatePlayerLocation(direction);
-                    return;
-                }
-                else if(mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth){
-                    direction = MovementDirection.LEFT;
-                    updatePlayerLocation(direction);
-                    return;
-                }
+            //UP-RIGHT
+            if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+                updatePlayerPositionKey(5);
+            }
+            //UP-LEFT
+            else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+                updatePlayerPositionKey(6);
+            }
+            //UP
+            else {
+                updatePlayerPositionKey(1);
             }
         }
     }
@@ -236,21 +235,16 @@ public class MyModel extends Observable implements IModel {
     @Override
     public void setPlayerPosition(Position startPosition) {
         this.UserPosition = startPosition;
-        if(startPosition.equals(GoalPosition)){
+        if (startPosition.equals(GoalPosition)) {
             this.reachGoal = true;
             setChanged();
             notifyObservers("Finish");
-        }
-        else{
+        } else {
             this.reachGoal = false;
             setChanged();
             notifyObservers(startPosition);
         }
 
-    }
-
-    public void setMaze(Maze maze) {
-        this.maze = maze;
     }
 
 
@@ -272,8 +266,76 @@ public class MyModel extends Observable implements IModel {
         return this.maze;
     }
 
+    public void setMaze(Maze maze) {
+        this.maze = maze;
+    }
+
     @Override
     public int[][] getGrid() {
         return maze.getMaze();
+    }
+
+    @Override
+    public void solveMaze(int row_User, int col_User) {
+        try {
+            Client client = new Client(InetAddress.getLocalHost(), 5401, (IClientStrategy) (inFromServer, outToServer) -> {
+                try {
+                    ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
+                    ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
+                    toServer.flush();
+
+                    toServer.writeObject(getMaze());
+                    toServer.flush();
+
+                    //updates this.solution to be mazeSolution
+                    solution = (Solution) fromServer.readObject();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            client.communicateWithServer();
+            setChanged();
+            notifyObservers();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void saveMaze(File saveFile) {
+        FileChooser fileChooser = new FileChooser();
+
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            try {
+                File newFile = new File(file.getAbsolutePath());
+                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(newFile));
+                byte[] byteMaze = this.getMaze().toByteArray();
+
+                out.writeObject(maze);
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                Alert a = new Alert((Alert.AlertType.ERROR));
+                a.setContentText("The Server had a problem with the file");
+                a.show();
+            }
+        }
+
+    }
+
+    @Override
+    public void loadMaze(Object file) {
+        Maze loadedMaze = new Maze((byte[]) file);
+        setPlayerPosition(loadedMaze.getStartPosition());
+        setMaze(loadedMaze);
+    }
+
+    @Override
+    public void exit() {
+        stopServers();
     }
 }
