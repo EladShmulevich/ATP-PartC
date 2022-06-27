@@ -1,6 +1,7 @@
 package View;
 
 import ViewModel.MyViewModel;
+import algorithms.mazeGenerators.MyMazeGenerator;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,7 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MyViewController implements IView {
-    public MazeGenerator generator;
+    public MyMazeGenerator generator;
     public TextField textField_mazeRows;
     public TextField textField_mazeColumns;
     public MazeDisplayer mazeDisplayer;
@@ -24,7 +25,7 @@ public class MyViewController implements IView {
 
     public void generateMaze(ActionEvent actionEvent) {
         if (generator == null)
-            generator = new MazeGenerator();
+            generator = new MyMazeGenerator();
 
 
         if (!textField_mazeRows.getText().matches("\\d*")) {
@@ -41,9 +42,9 @@ public class MyViewController implements IView {
             myViewModel.generateMaze(rows,cols);
 
 
-            int[][] maze = generator.generateRandomMaze(rows, cols);
+            //int[][] maze = generator.generateRandomMaze(rows, cols);
 
-            mazeDisplayer.drawMaze(maze);
+            //mazeDisplayer.drawMaze(maze);
 
         }
 
