@@ -10,8 +10,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import javafx.scene.media.Media;
+
+import java.io.File;
+import java.nio.file.Paths;
 
 public class Main extends Application {
 
@@ -22,7 +28,7 @@ public class Main extends Application {
         Image image = new Image("/resources/Backround/maze.png");
         primaryStage.getIcons().add(image);
 
-
+        /** set the app size to the screen size**/
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
 
@@ -42,6 +48,19 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
+
+//        music();
+
+
+
+    }
+    MediaPlayer mediaPlayer;
+    public void music(){
+        String s = "Star_Wars_Main_Theme_Song.mp3";
+        Media m = new Media(Paths.get(s).toUri().toString());
+
+        mediaPlayer = new MediaPlayer(m);
+        mediaPlayer.play();
     }
 
 
