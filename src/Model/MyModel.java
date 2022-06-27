@@ -9,12 +9,15 @@ import algorithms.search.SearchableMaze;
 import algorithms.search.Solution;
 import Server.ServerStrategySolveSearchProblem;
 import Server.ServerStrategyGenerateMaze;
+import javafx.beans.InvalidationListener;
+import java.util.Observable;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Observer;
 
-public class MyModel implements IModel{
+public class MyModel extends Observable implements IModel {
     private Maze maze;
     private SearchableMaze searchableMaze;
     private Solution solution;
@@ -39,6 +42,11 @@ public class MyModel implements IModel{
     }
 
     @Override
+    public void assignObserver(Observer o) {
+        this.addObserver(o);
+    }
+
+    @Override
     public void generateMaze(int rows, int cols) {
         try {
             Client client = new Client(InetAddress.getLocalHost(), 5400, new IClientStrategy() {
@@ -59,6 +67,7 @@ public class MyModel implements IModel{
                         colUser = maze.getStartPosition().getColumnIndex();
                         rowGoal = maze.getGoalPosition().getRowIndex();
                         colGoal = maze.getGoalPosition().getColumnIndex();
+                        setMaze(maze);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -137,5 +146,7 @@ public class MyModel implements IModel{
     public Maze getMaze() {
         return this.maze;
     }
+
+
 
 }

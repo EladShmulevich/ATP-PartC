@@ -3,18 +3,24 @@ package View;
 import ViewModel.MyViewModel;
 import algorithms.mazeGenerators.MyMazeGenerator;
 import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class MyViewController implements IView {
-    public MyMazeGenerator generator;
+import java.net.URL;
+import  java.util.ResourceBundle;
+
+
+public class MyViewController implements Initializable, IView {
+    //public MyMazeGenerator generator;
     public TextField textField_mazeRows;
     public TextField textField_mazeColumns;
     public MazeDisplayer mazeDisplayer;
@@ -24,9 +30,6 @@ public class MyViewController implements IView {
 
 
     public void generateMaze(ActionEvent actionEvent) {
-        if (generator == null)
-            generator = new MyMazeGenerator();
-
 
         if (!textField_mazeRows.getText().matches("\\d*")) {
             textField_mazeRows.setText("10");
@@ -78,4 +81,13 @@ public class MyViewController implements IView {
         window.showAndWait();
     }
 
+    public void mouseClicked(MouseEvent mouseEvent) {
+        mazeDisplayer.requestFocus();
+
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
 }
