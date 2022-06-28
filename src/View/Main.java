@@ -24,6 +24,7 @@ import javafx.scene.media.Media;
 import javafx.stage.WindowEvent;
 
 import javax.swing.text.View;
+import java.io.File;
 import java.nio.file.Paths;
 import java.util.Optional;
 
@@ -32,6 +33,8 @@ public class Main extends Application {
     public static IModel model;
     public  static MyViewModel viewModel;
     public static MyViewController myViewController;
+    public static MediaPlayer startMusic;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyView.fxml"));
@@ -40,6 +43,14 @@ public class Main extends Application {
         primaryStage.setTitle("Maze App");
         Image image = new Image("/resources/Background/maze.png");
         primaryStage.getIcons().add(image);
+
+        Media media = new Media(new File("resources/music/Star_Wars_Main_Theme_Song.mp3").toURI().toString());
+        startMusic = new MediaPlayer(media);
+        startMusic.setVolume(0.2);
+        startMusic.setAutoPlay(true);
+        startMusic.setCycleCount(MediaPlayer.INDEFINITE);
+
+
 
         /** set the app size to the screen size**/
         Screen screen = Screen.getPrimary();
@@ -85,6 +96,10 @@ public class Main extends Application {
                 }
             }
         });
+    }
+
+    public void mute(){
+        startMusic.setMute(true);
     }
 
 

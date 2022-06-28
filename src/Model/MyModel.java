@@ -109,7 +109,7 @@ public class MyModel extends Observable implements IModel {
 
     @Override
     public void generateMaze(int rows, int cols) {
-        System.out.println("3");
+
         if (rows < 3 && cols < 3) {
             rows = 5;  cols =5;
         } else if (rows < 3) {
@@ -137,12 +137,9 @@ public class MyModel extends Observable implements IModel {
                         byte[] decompressedMaze = new byte[finalRows * finalCols + 12 /*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed maze -
                         is.read(decompressedMaze); //Fill decompressedMaze with bytes
 
-                        System.out.println("4");
 
                         //toServer.flush();
                         maze = new Maze(decompressedMaze);
-                        notifyObservers("maze generated");
-                        System.out.println("10");
                         setPlayerPosition(maze.getStartPosition());
                         setGoalPosition(maze.getGoalPosition());
                     } catch (Exception e) {
@@ -153,8 +150,6 @@ public class MyModel extends Observable implements IModel {
                 }
             });
             client.communicateWithServer();
-
-
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -299,9 +294,16 @@ public class MyModel extends Observable implements IModel {
     @Override
     public void setPlayerPosition(Position startPosition) {
         this.UserPosition = startPosition;
-        System.out.println("user pos: row= " + this.UserPosition.getRowIndex() + " col= " + this.UserPosition.getColumnIndex());
-        //setChanged();
-        notifyObservers("player moved");
+/*        if (startPosition.equals(GoalPosition)) {
+            this.reachGoal = true;
+            setChanged();
+            notifyObservers("Finish");
+        } else {
+            this.reachGoal = false;
+            setChanged();
+            notifyObservers(startPosition);
+        }*/
+
     }
 
 
@@ -408,12 +410,5 @@ public class MyModel extends Observable implements IModel {
         return getUserPosition().getColumnIndex();
     }
 
-    public Position getGoalPosition(){
-        return this.GoalPosition;
-    }
-
-    public int getGoalRow(){ return getGoalPosition().getRowIndex();}
-
-    public int getGoalCol(){return getGoalPosition().getColumnIndex();}
 
 }

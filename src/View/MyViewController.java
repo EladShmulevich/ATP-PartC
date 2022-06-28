@@ -179,4 +179,11 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
 
+    public void play(ActionEvent actionEvent) {
+        Main.startMusic.setMute(false);
+    }
+
+    public void mute(ActionEvent actionEvent) {
+        Main.startMusic.setMute(true);
+    }
 }

@@ -28,6 +28,16 @@ public class MazeDisplayer extends Canvas {
     StringProperty imageFileNameWall = new SimpleStringProperty();
     StringProperty imageFileNamePlayer = new SimpleStringProperty();
 
+//    MazeDisplayer(){
+//        widthProperty().addListener(evt -> {
+//                draw();
+//
+//        });
+//        heightProperty().addListener(evt -> {
+//                draw();
+//        });
+//    }
+
     //need to complete @@@@@@@@@@@@@@@@@@@@
     int row_goal, col_goal;
     boolean endGame = false;
