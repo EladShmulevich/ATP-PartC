@@ -17,6 +17,7 @@ public interface IModel {
     void setGoalPosition(Position endPosition);
     public void assignObserver(Observer o);
 
+    public void stopServers();
     public void startServers();
     public void saveMaze(File saveFile);
     public void loadMaze(Object file);
@@ -25,4 +26,7 @@ public interface IModel {
 
     public Maze getMaze();
     public int[][] getGrid();
+
+    int getRowUser();
+    int getColUser();
 }

@@ -3,29 +3,33 @@ package View;
 //<?import View.MazeDisplayer?>
 //<MazeDisplayer fx:id="mazeDisplayer" height="400.0" width="400.0" />
 
+import ViewModel.MyViewModel;
+import Model.MyModel;
+import Model.IModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import javafx.scene.media.Media;
 
-import java.io.File;
+import javax.swing.text.View;
 import java.nio.file.Paths;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("MyView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyView.fxml"));
+        Parent root = fxmlLoader.load();
+        //Parent root = FXMLLoader.load(getClass().getResource("MyView.fxml"));
         primaryStage.setTitle("Maze App");
-        Image image = new Image("/resources/Backround/maze.png");
+        Image image = new Image("/resources/Background/maze.png");
         primaryStage.getIcons().add(image);
 
         /** set the app size to the screen size**/
@@ -40,7 +44,7 @@ public class Main extends Application {
 //        StackPane root1 = new StackPane();
         root.setStyle(
                 "-fx-background-image: url(" +
-                        "'/resources/Backround/cosmic.jpg'" +
+                        "'/resources/Background/cosmic.jpg'" +
                         "); " +
                         "-fx-background-size: cover;"
         );
@@ -49,19 +53,12 @@ public class Main extends Application {
         primaryStage.show();
 
 
-//        music();
-
-
-
+        IModel model = new MyModel();
+        MyViewModel viewModel = new MyViewModel(model);
+        MyViewController view = fxmlLoader.getController();
+        view.setMyViewModel(viewModel);
     }
-    MediaPlayer mediaPlayer;
-    public void music(){
-        String s = "Star_Wars_Main_Theme_Song.mp3";
-        Media m = new Media(Paths.get(s).toUri().toString());
 
-        mediaPlayer = new MediaPlayer(m);
-        mediaPlayer.play();
-    }
 
 
     public static void main(String[] args) {

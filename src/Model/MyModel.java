@@ -6,7 +6,6 @@ import IO.MyDecompressorInputStream;
 import Server.Server;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.Position;
-import algorithms.search.SearchableMaze;
 import algorithms.search.Solution;
 import Server.ServerStrategySolveSearchProblem;
 import Server.ServerStrategyGenerateMaze;
@@ -38,8 +37,11 @@ public class MyModel extends Observable implements IModel {
         this.serverRunning = false;
         this.UserPosition = null;
         this.GoalPosition = null;
-        this.mazeGeneratingServer = null;
-        this.solveServer = null;
+        this.mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
+        this.solveServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
+        this.mazeGeneratingServer.start();
+        this.solveServer.start();
+        this.serverRunning = true;
     }
 
 
@@ -52,6 +54,7 @@ public class MyModel extends Observable implements IModel {
         this.serverRunning = true;
     }
 
+    @Override
     public void stopServers() {
         this.mazeGeneratingServer.stop();
         this.solveServer.stop();
@@ -68,10 +71,11 @@ public class MyModel extends Observable implements IModel {
         this.GoalPosition = endPosition;
     }
 
-    @Override
+/*    @Override
     public void generateMaze(int rows, int cols) {
         try {
             Client client = new Client(InetAddress.getLocalHost(), 5400, new IClientStrategy() {
+                @Override
                 public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
                     try {
                         ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
@@ -82,7 +86,7 @@ public class MyModel extends Observable implements IModel {
                         toServer.flush();
                         byte[] compressedMaze = (byte[]) fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
                         InputStream is = new MyDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
-                        byte[] decompressedMaze = new byte[rows * cols + 12 /*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed maze -
+                        byte[] decompressedMaze = new byte[rows * cols + 12 *//*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*//*]; //allocating byte[] for the decompressed maze -
                         is.read(decompressedMaze); //Fill decompressedMaze with bytes
                         maze = new Maze(decompressedMaze);
                         setPlayerPosition(maze.getStartPosition());
@@ -99,8 +103,51 @@ public class MyModel extends Observable implements IModel {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+    }*/
 
+
+
+    @Override
+    public void generateMaze(int rows, int cols) {
+        try {
+            Client client = new Client(InetAddress.getLocalHost(), 5400, new IClientStrategy() {
+                public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
+                    try {
+                        ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
+                        toServer.flush();
+                        int[] mazeDimensions = new int[]{rows, cols};
+                        toServer.writeObject(mazeDimensions); //send maze dimensions to server
+
+                        toServer.flush();
+                        ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
+                        byte[] compressedMaze = (byte[]) fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
+                        InputStream is = new MyDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
+                        byte[] decompressedMaze = new byte[rows * cols + 12 /*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed maze -
+                        is.read(decompressedMaze); //Fill decompressedMaze with bytes
+
+
+                        //toServer.flush();
+                        maze = new Maze(decompressedMaze);
+                        /*setPlayerPosition(maze.getStartPosition());
+                        setGoalPosition(maze.getGoalPosition());*/
+                    } catch (Exception e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Error generating maze");
+                        alert.show();
+                    }
+                }
+            });
+            client.communicateWithServer();
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
+
+
+
+
+
 
     @Override
     public void updatePlayerPositionKey(int direction) {
@@ -338,4 +385,18 @@ public class MyModel extends Observable implements IModel {
     public void exit() {
         stopServers();
     }
+
+    public Position getUserPosition(){
+        return this.UserPosition;
+    }
+
+    public int getRowUser(){
+        return getUserPosition().getRowIndex();
+    }
+
+    public int getColUser(){
+        return getUserPosition().getColumnIndex();
+    }
+
+
 }
