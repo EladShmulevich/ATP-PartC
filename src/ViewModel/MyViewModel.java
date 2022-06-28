@@ -15,6 +15,7 @@ public class MyViewModel extends Observable implements Observer {
     public MyViewModel(IModel model) {
         this.model = model;
         this.model.assignObserver(this);
+        //lalalalalala
     }
 
     public void update(Observable o, Object arg) {
