@@ -29,6 +29,4 @@ public interface IModel {
 
     int getRowUser();
     int getColUser();
-    int getGoalRow();
-    int getGoalCol();
 }
