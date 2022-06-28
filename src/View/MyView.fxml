@@ -33,8 +33,8 @@
                     </rowConstraints>
                     <Label text="Maze rows:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                     <Label text="Maze columns:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                    <TextField fx:id="textField_mazeRows" text="12" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                    <TextField fx:id="textField_mazeColumns" text="12" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <TextField fx:id="textField_mazeRows" text="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <TextField fx:id="textField_mazeColumns" text="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     <Button onAction="#generateMaze" prefHeight="25.0" prefWidth="167.0" text="Generate Maze" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                     <Button cancelButton="true" onAction="#solveMaze" prefHeight="25.0" prefWidth="167.0" text="Solve Maze" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                     <Label text="Player Row = " GridPane.rowIndex="4" />
@@ -84,8 +84,7 @@
     <center>
         <Pane prefHeight="773.0" prefWidth="998.0" BorderPane.alignment="CENTER">
             <children>
-                <MazeDisplayer fx:id="mazeDisplayer" height="400.0"   imageFileNamePlayer="./resources/Player/GrandMaster-WizardCartman.transparent.png" imageFileNameWall="./resources/Background/wall.png" onKeyPressed="#keyPressed" width="400.0" />
-                <!-- <MazeDisplayer fx:id="mazeDisplayer" height="400.0" imageFileNameGoal="./resources/Background/bomb.png" imageFileNamePlayer="./resources/Player/GrandMaster-WizardCartman.transparent.png" imageFileNameWall="./resources/Background/wall.png" onKeyPressed="#keyPressed" width="400.0" />-->
+                <MazeDisplayer fx:id="mazeDisplayer" height="400.0" imageFileNamePlayer="./resources/Player/GrandMaster-WizardCartman.transparent.png" imageFileNameWall="./resources/Background/wall.png" onKeyPressed="#keyPressed" width="400.0" />
             </children>
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

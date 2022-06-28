@@ -66,7 +66,6 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
     public void generateMaze(ActionEvent actionEvent) {
-        System.out.println("1");
 
         if (!textField_mazeRows.getText().matches("\\d*")) {
             textField_mazeRows.setText("10");
@@ -82,7 +81,6 @@ public class MyViewController implements Initializable, IView, Observer {
         int cols = Integer.parseInt(textField_mazeColumns.getText());
 
         myViewModel.generateMaze(rows, cols);
-
         mazeGenerated();
 
     }
@@ -104,7 +102,6 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
     public void keyPressed(KeyEvent keyEvent) {
-        System.out.println("key pressed");
         myViewModel.movePlayer(keyEvent);
         keyEvent.consume();
     }
@@ -113,17 +110,15 @@ public class MyViewController implements Initializable, IView, Observer {
         mazeDisplayer.setPlayerPosition(row, col);
         setUpdatePlayerRow(row);
         setUpdatePlayerCol(col);
-
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
-        mazeDisplayer.requestFocus();
-        System.out.println("fouced changed");
+
+        //mazeDisplayer.requestFocus();
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("5");
         String change = (String) arg;
         switch (change){
             case "maze generated" -> mazeGenerated();
@@ -139,13 +134,10 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
     private void playerMoved() {
-        System.out.println("20");
-        System.out.println(myViewModel.getPlayerRow() + " " + myViewModel.getPlayerCol());
         setPlayerPosition(myViewModel.getPlayerRow(), myViewModel.getPlayerCol());
     }
 
     private void mazeGenerated() {
-        System.out.println("6");
         mazeDisplayer.drawMaze(myViewModel.getMaze());
     }
 
