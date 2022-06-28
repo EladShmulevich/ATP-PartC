@@ -140,8 +140,8 @@ public class MyModel extends Observable implements IModel {
 
                         //toServer.flush();
                         maze = new Maze(decompressedMaze);
-                        /*setPlayerPosition(maze.getStartPosition());
-                        setGoalPosition(maze.getGoalPosition());*/
+                        setPlayerPosition(maze.getStartPosition());
+                        setGoalPosition(maze.getGoalPosition());
                     } catch (Exception e) {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setContentText("Error generating maze");
@@ -294,7 +294,7 @@ public class MyModel extends Observable implements IModel {
     @Override
     public void setPlayerPosition(Position startPosition) {
         this.UserPosition = startPosition;
-        if (startPosition.equals(GoalPosition)) {
+/*        if (startPosition.equals(GoalPosition)) {
             this.reachGoal = true;
             setChanged();
             notifyObservers("Finish");
@@ -302,7 +302,7 @@ public class MyModel extends Observable implements IModel {
             this.reachGoal = false;
             setChanged();
             notifyObservers(startPosition);
-        }
+        }*/
 
     }
 
