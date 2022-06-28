@@ -2,8 +2,8 @@
   <library name="lib">
     <CLASSES>
       <root url="file://$USER_HOME$/javafx/javafx-sdk-16/lib" />
-      <root url="jar://$PROJECT_DIR$/ATP-Project-PartB.jar!/" />
       <root url="file://$PROJECT_DIR$/../../openjfx-18.0.1_windows-x64_bin-sdk/javafx-sdk-18.0.1/lib" />
+      <root url="jar://$PROJECT_DIR$/ATP-Project-PartBx.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

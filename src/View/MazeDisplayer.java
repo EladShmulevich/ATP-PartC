@@ -21,25 +21,32 @@ public class MazeDisplayer extends Canvas {
     private Solution solution;
 
     // player position:
-    private int playerRow = 0;
-    private int playerCol = 0;
+
+    boolean endGame = false;
+
+    private int playerRow = 2;
+    private int playerCol = 2;
+    private int row_goal;
+    private int col_goal;
 
     // wall and player images:
     StringProperty imageFileNameWall = new SimpleStringProperty();
     StringProperty imageFileNamePlayer = new SimpleStringProperty();
-
-    //need to complete @@@@@@@@@@@@@@@@@@@@
-    int row_goal, col_goal;
-    boolean endGame = false;
+    StringProperty imageFileNameGoal = new SimpleStringProperty();
 
 
-    public int getPlayerRow() {
-        return playerRow;
+    public void setGoal(int row, int col){
+        this.row_goal = row;
+        this.col_goal = col;
     }
 
-    public int getPlayerCol() {
-        return playerCol;
-    }
+    public int getRow_goal(){return this.row_goal;}
+
+    public int getCol_goal(){return this.col_goal;}
+
+    public int getPlayerRow() {return playerRow;}
+
+    public int getPlayerCol() {return playerCol;}
 
     public void setPlayerPosition(int row, int col) {
         this.playerRow = row;
@@ -53,6 +60,19 @@ public class MazeDisplayer extends Canvas {
         draw();
     }
 
+
+
+    public String getImageFileNameGoal(){
+        return  imageFileNameGoal.get();
+    }
+
+    public String imageFileNameGoalProperty() {
+        return imageFileNameGoal.get();
+    }
+
+    public void setImageFileNameGoal(String imageFileNameGoal) {
+        this.imageFileNamePlayer.set(imageFileNameGoal);
+    }
 
 
     public String getImageFileNameWall() {
@@ -80,13 +100,18 @@ public class MazeDisplayer extends Canvas {
     }
 
 
+
+
+
     public void drawMaze(int[][] maze) {
+        System.out.println("7");
         this.maze = maze;
         draw();
     }
 
 
     private void draw() {
+        System.out.println("8");
         if(maze != null){
             double canvasHeight = getHeight();
             double canvasWidth = getWidth();
@@ -103,7 +128,8 @@ public class MazeDisplayer extends Canvas {
             drawMazeWalls(graphicsContext, cellHeight, cellWidth, rows, cols);
             if(solution != null)
                 drawSolution(graphicsContext, cellHeight, cellWidth);
-            drawPlayer(graphicsContext, cellHeight, cellWidth);
+            //drawPlayer(graphicsContext, cellHeight, cellWidth);
+            //drawGoal(graphicsContext, cellHeight, cellWidth);
         }
     }
 
@@ -143,6 +169,9 @@ public class MazeDisplayer extends Canvas {
         double y = getPlayerRow() * cellHeight;
         graphicsContext.setFill(Color.GREEN);
 
+
+        System.out.println("drawPlayer Func: " +x +" " + y);
+
         Image playerImage = null;
         try {
             playerImage = new Image(new FileInputStream(getImageFileNamePlayer()));
@@ -156,59 +185,28 @@ public class MazeDisplayer extends Canvas {
     }
 
 
+    private void drawGoal(GraphicsContext graphicsContext, double cellHeight, double cellWidth) {
+        double x = getCol_goal() * cellWidth;
+        double y = getRow_goal() * cellHeight;
+        graphicsContext.setFill(Color.BLUE);
 
+        System.out.println("drawGoal Func: " +x +" " + y);
 
+        Image goalImage = null;
 
-
-
-    /*public void draw() {
-        double canvasHeight = getHeight();
-        double canvasWidth = getWidth();
-        double rows = maze.getMaze().length;
-        double cols = maze.getMaze()[0].length;
-        int[][] mazeGrid = maze.getMaze();
-        double cellHeight = canvasHeight / rows;
-        double cellWidth = canvasWidth / cols;
-
-        Image wall = new Image("/resources/Background/wall.png");
-        Image solPath = new Image("/resources/Background/stardust.png");
-        Image done = new Image("resources/Background/great-job.png");
-
-
-        GraphicsContext graphicsContext = getGraphicsContext2D();
-        graphicsContext.clearRect(0, 0, canvasWidth, canvasHeight);
-        graphicsContext.setFill(Color.BLACK);
-
-        ArrayList<AState> path = null;
-        if (solution != null)
-            path = solution.getSolutionPath();
-
-
-        double x,y;
-        // draw the maze
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (mazeGrid[i][j] == 1) {
-                    x= i * cellHeight;
-                    y = j * cellWidth;
-                    if(wall != null){
-                        graphicsContext.drawImage(wall, y, x, cellHeight, cellWidth);
-                    }
-                    else {
-                        graphicsContext.fillRect(x, y, canvasHeight, canvasWidth);
-                    }
-                }
-
-                if(solution != null){
-                    AState p  = new MazeState(0, new Position(i,j));
-                    assert path != null;
-                    if(path.contains(p)){
-                        graphicsContext.drawImage(solPath, j * cellWidth, i * cellHeight, canvasHeight, canvasWidth);
-                    }
-                }
-            }
+        try {
+            //goalImage = new Image(new FileInputStream(getImageFileNameGoal()));
+            goalImage = new Image("resources/Background/bomb.png");
+            //goalImage = new Image(new FileInputStream(getImageFileNamePlayer()));
+        } catch (Exception e) {
+            System.out.println("There is no goal image file");
         }
+        if(goalImage == null)
+            graphicsContext.fillRect(x, y, cellWidth, cellHeight);
+        else
+            graphicsContext.drawImage(goalImage, x, y, cellWidth, cellHeight);
+    }
 
-    }*/
+
 
 }

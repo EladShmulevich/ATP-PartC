@@ -15,7 +15,7 @@ public class MyViewModel extends Observable implements Observer {
     public MyViewModel(IModel model) {
         this.model = model;
         this.model.assignObserver(this);
-        //lalalalalala
+
     }
 
     public void update(Observable o, Object arg) {
@@ -30,17 +30,25 @@ public class MyViewModel extends Observable implements Observer {
     public int getPlayerRow(){
         return model.getRowUser();
     }
-
     public int getPlayerCol(){ return model.getColUser();}
+
+    public int getGoalRow(){return model.getGoalRow();}
+    public int getGoalCol(){return model.getGoalCol();}
+
+
+
 
     public Solution getSolution(){
         return this.model.getSolution();
     }
 
     public void generateMaze(int row, int col) {
+        System.out.println("2");
         this.model.generateMaze(row, col);
         //this.model.stopServers();
     }
+
+
 
 
     public void movePlayer(KeyEvent keyEvent){
@@ -60,6 +68,7 @@ public class MyViewModel extends Observable implements Observer {
                 return;
             }
         }
+        System.out.println("direction = " + direction);
         model.updatePlayerPositionKey(direction);
     }
 
