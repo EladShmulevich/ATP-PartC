@@ -84,7 +84,7 @@
     <center>
         <Pane prefHeight="773.0" prefWidth="998.0" BorderPane.alignment="CENTER">
             <children>
-                <MazeDisplayer fx:id="mazeDisplayer" height="400.0" imageFileNamePlayer="./resources/Player/cartmanMage.jpg" imageFileNameWall="./resources/Background/wall.png" onKeyPressed="#keyPressed" width="400.0" />
+                <MazeDisplayer fx:id="mazeDisplayer" height="400.0" imageFileNamePlayer="./resources/Player/GrandMaster-WizardCartman.transparent.png" imageFileNameWall="./resources/Background/wall.png" onKeyPressed="#keyPressed" width="400.0" />
             </children>
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

@@ -109,20 +109,32 @@ public class MyModel extends Observable implements IModel {
 
     @Override
     public void generateMaze(int rows, int cols) {
+
+        if (rows < 3 && cols < 3) {
+            rows = 5;  cols =5;
+        } else if (rows < 3) {
+            rows = 5 ;
+        } else if (cols < 3) {
+            cols = 5;
+        } else {}
+
         try {
+            int finalRows = rows;
+            int finalCols = cols;
             Client client = new Client(InetAddress.getLocalHost(), 5400, new IClientStrategy() {
                 public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
                     try {
                         ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
                         toServer.flush();
-                        int[] mazeDimensions = new int[]{rows, cols};
+
+                        int[] mazeDimensions = new int[]{finalRows, finalCols};
                         toServer.writeObject(mazeDimensions); //send maze dimensions to server
 
                         toServer.flush();
                         ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
                         byte[] compressedMaze = (byte[]) fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
                         InputStream is = new MyDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
-                        byte[] decompressedMaze = new byte[rows * cols + 12 /*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed maze -
+                        byte[] decompressedMaze = new byte[finalRows * finalCols + 12 /*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressed maze -
                         is.read(decompressedMaze); //Fill decompressedMaze with bytes
 
 
