@@ -128,6 +128,7 @@
                                 <MenuItem mnemonicParsing="false" onAction="#openFile" text="Load" />
                                 <MenuItem mnemonicParsing="false" onAction="#saveMaze" text="Save" />
                         <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
+                        <MenuItem mnemonicParsing="false" onAction="#NewMaze" text="New" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Options">
@@ -137,8 +138,8 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="About" onAction="#aboutClickHandler"/>
-                        <MenuItem mnemonicParsing="false" text="Help" onAction="#HelpClickHandler" />
+                                <MenuItem mnemonicParsing="false" onAction="#aboutClickHandler" text="About" />
+                        <MenuItem mnemonicParsing="false" onAction="#HelpClickHandler" text="Help" />
                             </items>
                         </Menu>
                     </menus>
@@ -147,7 +148,7 @@
         </VBox>
     </top>
     <center>
-        <Pane fx:id="BoardPane" onMouseDragged="#mouseDragged"  prefHeight="773.0" prefWidth="998.0" BorderPane.alignment="CENTER">
+        <Pane fx:id="BoardPane" onMouseDragged="#mouseDragged" prefHeight="773.0" prefWidth="998.0" BorderPane.alignment="CENTER">
             <children>
 <!--                onMouseDragged="#mouseDragged" onScroll="#mouseScroll"-->
                 <MazeDisplayer fx:id="mazeDisplayer" onKeyPressed="#keyPressed" onScroll="#mouseScroll" height="550.0" imageFileNamePlayer="./resources/Player/GrandMaster-WizardCartman.transparent.png" imageFileNameWall="./resources/Background/wall.png" imageFileNameGoal="./resources/Player/kenny.png" imageFileNameFinish="./resources/Background/great-job.png" imageFileNamePath="./resources/Background/bomb.png" width="550.0" />

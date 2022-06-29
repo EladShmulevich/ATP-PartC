@@ -12,7 +12,6 @@ public interface IModel {
     public void generateMaze(int rows, int cols);
     public void solveMaze(int row_User,int col_User);
     public void updatePlayerPositionKey(int direction);
-//    void updatePlayerPositionMouse(MouseEvent mouseEvent, double mouseX, double mouseY, double cellHeight, double cellWidth);
     void setPlayerPosition(Position startPosition);
     void setGoalPosition(Position endPosition);
     public void assignObserver(Observer o);

@@ -71,39 +71,7 @@ public class MyModel extends Observable implements IModel {
         this.GoalPosition = endPosition;
     }
 
-/*    @Override
-    public void generateMaze(int rows, int cols) {
-        try {
-            Client client = new Client(InetAddress.getLocalHost(), 5400, new IClientStrategy() {
-                @Override
-                public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
-                    try {
-                        ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
-                        ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
-                        toServer.flush();
-                        int[] mazeDimensions = new int[]{rows, cols};
-                        toServer.writeObject(mazeDimensions); //send maze dimensions to server
-                        toServer.flush();
-                        byte[] compressedMaze = (byte[]) fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
-                        InputStream is = new MyDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
-                        byte[] decompressedMaze = new byte[rows * cols + 12 *//*CHANGE SIZE ACCORDING TO YOU MAZE SIZE*//*]; //allocating byte[] for the decompressed maze -
-                        is.read(decompressedMaze); //Fill decompressedMaze with bytes
-                        maze = new Maze(decompressedMaze);
-                        setPlayerPosition(maze.getStartPosition());
-                        setGoalPosition(maze.getGoalPosition());
-                    } catch (Exception e) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setContentText("Error generating maze");
-                        alert.show();
-                    }
-                }
-            });
-            client.communicateWithServer();
 
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }*/
 
 
 
@@ -359,16 +327,13 @@ public class MyModel extends Observable implements IModel {
 
     @Override
     public void saveMaze(File saveFile) {
-        FileChooser fileChooser = new FileChooser();
 
-        File file = fileChooser.showSaveDialog(null);
-        if (file != null) {
             try {
-                File newFile = new File(file.getAbsolutePath());
+                File newFile = new File(saveFile.getAbsolutePath());
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(newFile));
                 byte[] byteMaze = this.getMaze().toByteArray();
 
-                out.writeObject(maze);
+                out.writeObject(byteMaze);
                 out.flush();
                 out.close();
             } catch (IOException e) {
@@ -378,7 +343,7 @@ public class MyModel extends Observable implements IModel {
                 a.setContentText("The Server had a problem with the file");
                 a.show();
             }
-        }
+
 
     }
 

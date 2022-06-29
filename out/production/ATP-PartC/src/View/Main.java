@@ -31,17 +31,13 @@ import java.util.Optional;
 
 public class Main extends Application {
 
-//    public static IModel model;
-//    public  static MyViewModel viewModel;
-//    public static MyViewController myViewController;
     public static MediaPlayer startMusic;
-//    public static Parent root;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyView.fxml"));
         Parent root = fxmlLoader.load();
-        //Parent root = FXMLLoader.load(getClass().getResource("MyView.fxml"));
         primaryStage.setTitle("Maze App");
         Image image = new Image("/resources/Background/maze.png");
         primaryStage.getIcons().add(image);

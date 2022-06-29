@@ -128,7 +128,7 @@
                                 <MenuItem mnemonicParsing="false" onAction="#openFile" text="Load" />
                                 <MenuItem mnemonicParsing="false" onAction="#saveMaze" text="Save" />
                         <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
-                        <MenuItem mnemonicParsing="false" onAction="#openFile" text="New" />
+                        <MenuItem mnemonicParsing="false" onAction="#NewMaze" text="New" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Options">

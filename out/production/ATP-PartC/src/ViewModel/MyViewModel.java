@@ -7,6 +7,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
+import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -192,5 +193,9 @@ public class MyViewModel extends Observable implements Observer {
 
     public int getStartCol() {
         return startCol;
+    }
+
+    public void saveMaze(File fileName){
+        this.model.saveMaze(fileName);
     }
 }

@@ -359,16 +359,13 @@ public class MyModel extends Observable implements IModel {
 
     @Override
     public void saveMaze(File saveFile) {
-        FileChooser fileChooser = new FileChooser();
 
-        File file = fileChooser.showSaveDialog(null);
-        if (file != null) {
             try {
-                File newFile = new File(file.getAbsolutePath());
+                File newFile = new File(saveFile.getAbsolutePath());
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(newFile));
                 byte[] byteMaze = this.getMaze().toByteArray();
 
-                out.writeObject(maze);
+                out.writeObject(byteMaze);
                 out.flush();
                 out.close();
             } catch (IOException e) {
@@ -378,7 +375,7 @@ public class MyModel extends Observable implements IModel {
                 a.setContentText("The Server had a problem with the file");
                 a.show();
             }
-        }
+
 
     }
 

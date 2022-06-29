@@ -22,10 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.transform.Scale;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
+import javafx.stage.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +41,8 @@ public class MyViewController implements Initializable, IView, Observer {
 
 
 
-
+    @FXML
+    public Pane pane;
     @FXML
     public TextField textField_mazeRows;
     @FXML
@@ -57,7 +55,10 @@ public class MyViewController implements Initializable, IView, Observer {
     public Label playerCol;
     @FXML
     public Pane BoardPane;
+    @FXML
+    public Button generateMaze;
 
+    private final FileChooser fileChooser = new FileChooser();
     private MediaPlayer mediaPlayer; //Media player
 
 
@@ -134,6 +135,37 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
 
+    public void generateMaze() {
+
+        if (!textField_mazeRows.getText().matches("\\d*")) {
+            textField_mazeRows.setText("10");
+            popAlert("Error", "Numbers Only!");
+        }
+
+        if (!textField_mazeColumns.getText().matches("\\d*")) {
+            textField_mazeColumns.setText("10");
+            popAlert("Error", "Numbers Only!");
+        }
+
+        int rows = Integer.parseInt(textField_mazeRows.getText());
+        int cols = Integer.parseInt(textField_mazeColumns.getText());
+
+        myViewModel.generateMaze(rows, cols);
+
+        mazeDisplayer.setRoundFirst(true);
+        mazeDisplayer.requestFocus();
+        mazeDisplayer.widthProperty().bind(BoardPane.widthProperty());
+        mazeDisplayer.heightProperty().bind(BoardPane.heightProperty());
+
+
+        mazeDisplayer.drawMaze(myViewModel.getmaze());
+
+        Main.startMusic.setAutoPlay(true);
+
+
+    }
+
+
     public Properties getProperties(){
         return properties;
     }
@@ -165,6 +197,8 @@ public class MyViewController implements Initializable, IView, Observer {
         fc.setInitialDirectory(new File("./resources"));
         File chosen = fc.showOpenDialog(null);
         //...
+
+
     }
 
     public void keyPressed(KeyEvent keyEvent) {
@@ -364,7 +398,18 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
     public void saveMaze(ActionEvent actionEvent) {
-        
+        Window stage = BoardPane.getScene().getWindow();
+        fileChooser.setTitle("Save Maze");
+        fileChooser.setInitialFileName("maze");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("textfile" , "*.txt"));
+        try{
+            File file = fileChooser.showSaveDialog(stage);
+            myViewModel.saveMaze(file);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     public void HelpClickHandler(ActionEvent actionEvent) {
@@ -429,4 +474,10 @@ public class MyViewController implements Initializable, IView, Observer {
         }
 
     }
+
+    public void NewMaze(ActionEvent actionEvent) {
+            Main.startMusic.setMute(true);
+            mazeDisplayer.getGraphicsContext2D().clearRect(0, 0, mazeDisplayer.getWidth(), mazeDisplayer.getHeight());
+            playerRow.requestFocus();
+            textField_mazeRows.requestFocus();}
 }
