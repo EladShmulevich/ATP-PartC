@@ -253,51 +253,51 @@ public class MyModel extends Observable implements IModel {
         return false;
     }
 
-    @Override
-    public void updatePlayerPositionMouse(MouseEvent mouseEvent, double mouseX, double mouseY, double cellHeight, double cellWidth) {
-        if (this.maze != null) {
-            //DOWN
-            if (mouseEvent.getY() > mouseY && Math.abs(mouseEvent.getY() - mouseY) >= cellHeight) {
-                //DOWN-RIGHT
-                if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-                    updatePlayerPositionKey(7);
-                }
-                //DOWN-LEFT
-                else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-                    updatePlayerPositionKey(8);
-                }
-                //DOWN
-                else {
-                    updatePlayerPositionKey(2);
-                }
-                return;
-            }
-            //Checks RIGHT/LEFT
-            else {
-                if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-                    updatePlayerPositionKey(3);
-                } else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-                    updatePlayerPositionKey(4);
-                }
-            }
-        }
-        //Checks UP
-        else if (mouseEvent.getY() < mouseY && Math.abs(mouseEvent.getY() - mouseY) >= cellHeight) {
-
-            //UP-RIGHT
-            if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-                updatePlayerPositionKey(5);
-            }
-            //UP-LEFT
-            else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-                updatePlayerPositionKey(6);
-            }
-            //UP
-            else {
-                updatePlayerPositionKey(1);
-            }
-        }
-    }
+//    @Override
+//    public void updatePlayerPositionMouse(MouseEvent mouseEvent, double mouseX, double mouseY, double cellHeight, double cellWidth) {
+//        if (this.maze != null) {
+//            //DOWN
+//            if (mouseEvent.getY() > mouseY && Math.abs(mouseEvent.getY() - mouseY) >= cellHeight) {
+//                //DOWN-RIGHT
+//                if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+//                    updatePlayerPositionKey(7);
+//                }
+//                //DOWN-LEFT
+//                else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+//                    updatePlayerPositionKey(8);
+//                }
+//                //DOWN
+//                else {
+//                    updatePlayerPositionKey(2);
+//                }
+//                return;
+//            }
+//            //Checks RIGHT/LEFT
+//            else {
+//                if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+//                    updatePlayerPositionKey(3);
+//                } else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+//                    updatePlayerPositionKey(4);
+//                }
+//            }
+//        }
+//        //Checks UP
+//        else if (mouseEvent.getY() < mouseY && Math.abs(mouseEvent.getY() - mouseY) >= cellHeight) {
+//
+//            //UP-RIGHT
+//            if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+//                updatePlayerPositionKey(5);
+//            }
+//            //UP-LEFT
+//            else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
+//                updatePlayerPositionKey(6);
+//            }
+//            //UP
+//            else {
+//                updatePlayerPositionKey(1);
+//            }
+//        }
+//    }
 
     @Override
     public void setPlayerPosition(Position startPosition) {

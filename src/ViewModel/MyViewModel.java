@@ -3,6 +3,7 @@ package ViewModel;
 import Model.IModel;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
@@ -98,13 +99,18 @@ public class MyViewModel extends Observable implements Observer {
 
     public void generateMaze(int row, int col) {
         this.model.generateMaze(row, col);
-        //this.model.stopServers();
     }
 
 
-    public void movePlayer(KeyEvent keyEvent){
+    public void movePlayer(KeyEvent event) {
+//        KeyCode key = (KeyCode) o;
+//        if(key == null){
+//            KeyEvent ke = (KeyEvent) o;
+//            assert false;
+//            key = ke.getCode();
+//        }
         int direction;
-        switch (keyEvent.getCode()){
+        switch (event.getCode()){
             case NUMPAD8 -> direction = 1; //UP
             case UP -> direction = 1;
             case NUMPAD2 -> direction = 2; //DOWN
@@ -126,9 +132,45 @@ public class MyViewModel extends Observable implements Observer {
         model.updatePlayerPositionKey(direction);
     }
 
-    public void movePlayer(MouseEvent mouseEvent, double mouseX, double mouseY, double cellHeight, double cellWidth){
-        this.model.updatePlayerPositionMouse(mouseEvent, mouseX, mouseY, cellHeight, cellWidth);
+
+
+    public void movePlayer(KeyCode kc){
+        int direction;
+        switch (kc){
+            case NUMPAD8 -> direction = 1; //UP
+            case UP -> direction = 1;
+            case NUMPAD2 -> direction = 2; //DOWN
+            case DOWN -> direction = 2;
+            case NUMPAD6 -> direction = 3; //RIGHT;
+            case RIGHT -> direction = 3;
+            case NUMPAD4 -> direction = 4; //LEFT
+            case LEFT -> direction = 4;
+            case NUMPAD9 -> direction = 5; //UP_RIGHT
+            case NUMPAD7 -> direction = 6; //UP_LEFT
+            case NUMPAD3 -> direction = 7; //DOWN_RIGHT
+            case NUMPAD1 -> direction = 8; //DOWN_LEFT
+
+            default -> {
+                // no need to move the player...
+                return;
+            }
+        }
+        model.updatePlayerPositionKey(direction);
     }
+
+//    public void movePlayer(MouseEvent mouseEvent, double mouseX, double mouseY, double cellHeight, double cellWidth){
+//        this.model.updatePlayerPositionMouse(mouseEvent, mouseX, mouseY, cellHeight, cellWidth);
+//    }
+
+    public void movePlayer(double mouseX, double mouseY){
+        if ( mouseX == colPlayer && mouseY < rowPlayer )
+            movePlayer(KeyCode.NUMPAD8);
+        else if (mouseY == rowPlayer && mouseX > colPlayer)
+            movePlayer(KeyCode.NUMPAD6);
+        else if ( mouseY == rowPlayer && mouseX < colPlayer )
+            movePlayer(KeyCode.NUMPAD4);
+        else if (mouseX == colPlayer && mouseY > rowPlayer )
+            movePlayer(KeyCode.NUMPAD2); }
 
 
     //to check

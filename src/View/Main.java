@@ -48,7 +48,7 @@ public class Main extends Application {
 
         Media media = new Media(new File("resources/music/Star_Wars_Main_Theme_Song.mp3").toURI().toString());
         startMusic = new MediaPlayer(media);
-        startMusic.setVolume(0.2);
+        startMusic.setVolume(0.1);
         startMusic.setAutoPlay(true);
         startMusic.setCycleCount(MediaPlayer.INDEFINITE);
 
@@ -58,12 +58,6 @@ public class Main extends Application {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
 
-//        primaryStage.setX(bounds.getMinX());
-//        primaryStage.setY(bounds.getMinY());
-//        primaryStage.setWidth(bounds.getWidth());
-//        primaryStage.setHeight(bounds.getHeight());
-
-//        StackPane root1 = new StackPane();
         root.setStyle(
                 "-fx-background-image: url(" +
                         "'/resources/Background/cosmic.jpg'" +
@@ -72,8 +66,8 @@ public class Main extends Application {
         );
 
 
-
-        primaryStage.setScene(new Scene(root, 800, 600));
+        Scene scene = new Scene(root, 800, 750);
+        primaryStage.setScene(scene);
         primaryStage.show();
 
 
@@ -82,6 +76,7 @@ public class Main extends Application {
         MyViewController myViewController = fxmlLoader.getController();
         myViewController.setMyViewModel(viewModel);
         viewModel.addObserver(myViewController);
+
 
 
 
@@ -100,7 +95,11 @@ public class Main extends Application {
                 }
             }
         });
+
+
     }
+
+
 
     public void mute(){
         startMusic.setMute(true);

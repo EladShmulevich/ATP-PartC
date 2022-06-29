@@ -39,26 +39,32 @@
                     </rowConstraints>
                     <Label text="Maze rows:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="0">
                   <font>
-                     <Font size="13.0" />
+                     <Font name="Franklin Gothic Medium" size="13.0" />
                   </font></Label>
                     <Label text="Maze columns:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="1">
                   <font>
                      <Font size="13.0" />
                   </font></Label>
-                    <TextField fx:id="textField_mazeRows" text="10" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                    <TextField fx:id="textField_mazeColumns" text="10" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <TextField fx:id="textField_mazeRows" text="15" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <TextField fx:id="textField_mazeColumns" text="15" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     <Button onAction="#generateMaze" prefHeight="25.0" prefWidth="167.0" text="Generate Maze" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                     <Button cancelButton="true" onAction="#solveMaze" prefHeight="25.0" prefWidth="167.0" text="Solve Maze" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                     <Label text="Player Row = " textFill="WHITE" GridPane.rowIndex="4">
                   <font>
-                     <Font size="13.0" />
+                     <Font name="Franklin Gothic Medium" size="13.0" />
                   </font></Label>
                     <Label text="Player Col = " textFill="WHITE" GridPane.rowIndex="5">
                   <font>
+                     <Font name="Franklin Gothic Medium" size="13.0" />
+                  </font></Label>
+                    <Label fx:id="playerRow" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <font>
+                     <Font name="Franklin Gothic Medium" size="13.0" />
+                  </font></Label>
+                    <Label fx:id="playerCol" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                  <font>
                      <Font size="13.0" />
                   </font></Label>
-                    <Label fx:id="playerRow" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                    <Label fx:id="playerCol" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                 </GridPane>
             </children>
             <padding>
@@ -119,18 +125,20 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open" />
-                                <MenuItem mnemonicParsing="false" text="Close" />
+                                <MenuItem mnemonicParsing="false" onAction="#openFile" text="Load" />
+                                <MenuItem mnemonicParsing="false" onAction="#exit" text="Save" />
+                        <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Edit">
+                        <Menu mnemonicParsing="false" text="Options">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="Delete" />
+                                <MenuItem mnemonicParsing="false" text="Change Properties" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
                                 <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem mnemonicParsing="false" text="Help" />
                             </items>
                         </Menu>
                     </menus>
@@ -139,10 +147,10 @@
         </VBox>
     </top>
     <center>
-        <Pane fx:id="BoardPane" minHeight="-Infinity" minWidth="-Infinity" onDragDetected="#DragDetected" onMousePressed="#MousePressed" onMouseReleased="#MouseReleased" onMouseDragged="#mouseDragged" prefHeight="773.0" prefWidth="998.0" BorderPane.alignment="CENTER">
+        <Pane fx:id="BoardPane" onMouseDragged="#mouseDragged"  prefHeight="773.0" prefWidth="998.0" BorderPane.alignment="CENTER">
             <children>
 <!--                onMouseDragged="#mouseDragged" onScroll="#mouseScroll"-->
-                <MazeDisplayer fx:id="mazeDisplayer" onKeyPressed="#keyPressed" height="800.0" imageFileNamePlayer="./resources/Player/GrandMaster-WizardCartman.transparent.png" imageFileNameWall="./resources/Background/wall.png" imageFileNameGoal="./resources/Background/bomb.png" imageFileNameFinish="./resources/Background/great-job.png" width="800.0" />
+                <MazeDisplayer fx:id="mazeDisplayer" onKeyPressed="#keyPressed" onScroll="#mouseScroll" height="550.0" imageFileNamePlayer="./resources/Player/GrandMaster-WizardCartman.transparent.png" imageFileNameWall="./resources/Background/wall.png" imageFileNameGoal="./resources/Background/enddd.png" imageFileNameFinish="./resources/Background/great-job.png" imageFileNamePath="./resources/Background/bomb.png" width="550.0" />
             </children>
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

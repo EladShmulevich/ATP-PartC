@@ -28,17 +28,14 @@ public class MazeDisplayer extends Canvas {
     int row_goal, col_goal;
     boolean endGame = false;
     private boolean roundFirst = true;
-    MyViewController controller;
 
 
     // wall and player images:
     StringProperty imageFileNameWall = new SimpleStringProperty();
     StringProperty imageFileNamePlayer = new SimpleStringProperty();
     StringProperty imageFileNameGoal = new SimpleStringProperty();
-
     StringProperty imageFileNameFinish = new SimpleStringProperty();
-
-
+    StringProperty imageFileNamePath = new SimpleStringProperty();
 
 
     public MazeDisplayer() {
@@ -50,39 +47,37 @@ public class MazeDisplayer extends Canvas {
         });
     }
 
-
+    public String getImageFileNamePath() {
+        return imageFileNamePath.get();
+    }
+    public void setImageFileNamePath(String imageFileNamePath) {
+        this.imageFileNamePath.set(imageFileNamePath);
+    }
     public String getImageFileNameFinish() {
         return imageFileNameFinish.get();
     }
     public void setImageFileNameFinish(String imageFileNameFinish) {
         this.imageFileNameFinish.set(imageFileNameFinish);
     }
-
     public String getImageFileNameWall() {
         return imageFileNameWall.get();
     }
     public void setImageFileNameWall(String imageFileNameWall) {
         this.imageFileNameWall.set(imageFileNameWall);
     }
-
     public String getImageFileNamePlayer() {
         return imageFileNamePlayer.get();
     }
-
-
-
     public void setImageFileNamePlayer(String imageFileNamePlayer) {
         this.imageFileNamePlayer.set(imageFileNamePlayer);
     }
-
-
     public String getImageFileNameGoal() {
         return imageFileNameGoal.get();
     }
-
     public void setImageFileNameGoal(String imageFileNameGoal) {
         this.imageFileNameGoal.set(imageFileNameGoal);
     }
+
 
     public void setMaze(int[][] maze) {
         this.maze = maze;
@@ -169,12 +164,12 @@ public class MazeDisplayer extends Canvas {
             }
 
             if(endGame && finishImage != null) {
-                graphicsContext.drawImage(finishImage, 50, 50, 500, 500);
+
+                graphicsContext.drawImage(finishImage,  graphicsContext.getCanvas().getWidth()/4,graphicsContext.getCanvas().getHeight()/4,  550, 550);
 
             }
             if(solution != null)
                 solution = null;
-
 
             drawPlayer(graphicsContext, cellHeight, cellWidth);
             drawGoal(graphicsContext, cellHeight, cellWidth);
@@ -183,16 +178,20 @@ public class MazeDisplayer extends Canvas {
 
 
 
-
-    private void drawSolution(GraphicsContext graphicsContext, double cellHeight, double cellWidth, int rows, int cols, ArrayList<AState> path) {
+    public void drawSolution(GraphicsContext graphicsContext, double cellHeight, double cellWidth, int rows, int cols, ArrayList<AState> path) {
         // need to be implemented
+        Image SolPath = null;
+        try {
+            SolPath = new Image(new FileInputStream(getImageFileNamePath()));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         if(path != null)
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
                     AState state = new MazeState(0, new Position(i, j));
                     if(path.contains(state)) {
-                        graphicsContext.setFill(Color.GREEN);
-                        graphicsContext.fillRect(j * cellWidth, i * cellHeight, cellWidth, cellHeight);
+                        graphicsContext.drawImage(SolPath, j * cellWidth, i * cellHeight, cellWidth, cellHeight);
                     }
                 }
                 }
@@ -267,6 +266,11 @@ public class MazeDisplayer extends Canvas {
     }
 
     @Override
+    public boolean isResizable() {
+        return true;
+    }
+
+    @Override
     public double prefWidth(double height) {
         return getWidth();
     }
@@ -276,76 +280,8 @@ public class MazeDisplayer extends Canvas {
         return getHeight();
     }
 
-    public boolean isRoundFirst() {
-        return roundFirst;
-    }
-
     public void setRoundFirst(boolean roundFirst) {
         this.roundFirst = roundFirst;
     }
-
-    public double getCellHeight() {
-        double canvasHeight = getHeight();
-        int mazeHeight = maze1.getMaze().length;
-        double cellHeight = (canvasHeight) / mazeHeight;
-        return cellHeight;
-    }
-
-    public double getCellWidth() {
-        double canvasWidth = getWidth();
-        int mazeWidth = maze1.getMaze()[0].length;
-        double cellWidth = canvasWidth / mazeWidth;
-        return cellWidth;
-    }
-
-    /*public void draw() {
-        double canvasHeight = getHeight();
-        double canvasWidth = getWidth();
-        double rows = maze.getMaze().length;
-        double cols = maze.getMaze()[0].length;
-        int[][] mazeGrid = maze.getMaze();
-        double cellHeight = canvasHeight / rows;
-        double cellWidth = canvasWidth / cols;
-
-        Image wall = new Image("/resources/Background/wall.png");
-        Image solPath = new Image("/resources/Background/stardust.png");
-        Image done = new Image("resources/Background/great-job.png");
-
-
-        GraphicsContext graphicsContext = getGraphicsContext2D();
-        graphicsContext.clearRect(0, 0, canvasWidth, canvasHeight);
-        graphicsContext.setFill(Color.BLACK);
-
-        ArrayList<AState> path = null;
-        if (solution != null)
-            path = solution.getSolutionPath();
-
-
-        double x,y;
-        // draw the maze
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (mazeGrid[i][j] == 1) {
-                    x= i * cellHeight;
-                    y = j * cellWidth;
-                    if(wall != null){
-                        graphicsContext.drawImage(wall, y, x, cellHeight, cellWidth);
-                    }
-                    else {
-                        graphicsContext.fillRect(x, y, canvasHeight, canvasWidth);
-                    }
-                }
-
-                if(solution != null){
-                    AState p  = new MazeState(0, new Position(i,j));
-                    assert path != null;
-                    if(path.contains(p)){
-                        graphicsContext.drawImage(solPath, j * cellWidth, i * cellHeight, canvasHeight, canvasWidth);
-                    }
-                }
-            }
-        }
-
-    }*/
 
 }

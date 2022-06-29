@@ -9,16 +9,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -27,6 +26,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -126,10 +126,20 @@ public class MyViewController implements Initializable, IView, Observer {
 
 
     public void solveMaze(ActionEvent actionEvent) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText("Solving maze...");
-        alert.show();
-        myViewModel.solveMaze(mazeDisplayer.getPlayerRow(), mazeDisplayer.getPlayerCol());
+        if(myViewModel.getmaze() == null)
+            {
+            popAlert("Error", "No maze to solve!");}
+        else{
+            popAlert("Solve", "Solving maze...");
+
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setContentText("Solving maze...");
+//            alert.show();
+            myViewModel.solveMaze(mazeDisplayer.getPlayerRow(), mazeDisplayer.getPlayerCol());
+            mazeDisplayer.setSolution(myViewModel.getSolution());
+        }
+
+
 //        mazeDisplayer.ShowSolution(myViewModel.getSolution());
     }
 
@@ -208,17 +218,7 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
 
-    private void mazeSolved() {
-        mazeDisplayer.setSolution(myViewModel.getSolution());
-    }
 
-    private void playerMoved() {
-        setPlayerPosition(myViewModel.getPlayerRow(), myViewModel.getPlayerCol());
-    }
-
-    private void mazeGenerated() {
-        mazeDisplayer.drawMaze(myViewModel.getmaze());
-    }
 
 
     public MyViewModel getMyViewModel() {
@@ -266,38 +266,47 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
     public void exit() {
-        myViewModel.Exit();
-        System.exit(0);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("Are you sure that you want to exit?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            myViewModel.Exit();
+            System.exit(0);
+        }
     }
 
     public void mouseDragged(MouseEvent mouseEvent) {
-        double cell_height = this.mazeDisplayer.getCellHeight();
-        double cell_width = this.mazeDisplayer.getCellWidth();
-        boolean stopDrag = (Math.abs(MouseX-mouseEvent.getX()) >= cell_width || Math.abs(MouseY-mouseEvent.getY()) >= cell_height);
-
-        if(dragging && stopDrag){
-            this.myViewModel.movePlayer(mouseEvent, MouseX, MouseY, mazeDisplayer.getCellHeight(), mazeDisplayer.getCellWidth());
+        int rows = myViewModel.getmaze().getMaze().length;
+        int cols = myViewModel.getmaze().getMaze()[0].length;
+        if(myViewModel.getmaze() != null) {
+            int Size = Math.max(rows,cols);
+            MouseX = mouseDragHandler(Size, mazeDisplayer.getHeight(), rows, mouseEvent.getX(), mazeDisplayer.getWidth() /Size);
+            MouseY = mouseDragHandler(Size, mazeDisplayer.getWidth(), cols, mouseEvent.getY(), mazeDisplayer.getHeight() /Size);
+            myViewModel.movePlayer(MouseX, MouseY);
         }
-
     }
 
-    public void DragDetected(MouseEvent mouseEvent) {
-        this.MouseX = mouseEvent.getX();
-        this.MouseY = mouseEvent.getY();
-        dragging = true;
+    private  double mouseDragHandler(int PaneSize, double canvasSize, int mazeSize,double mouseEvent,double temp){
+        double cellSize=canvasSize/PaneSize;
+        double start = (canvasSize / 2 - (cellSize * mazeSize / 2)) / cellSize ;
+        return (int) (((mouseEvent) - start ) / temp);
     }
 
+    public void mouseScroll(ScrollEvent scrollEvent) {
+        if(scrollEvent.isControlDown()){
+            double zoomDelta = 1.25;
+            if(scrollEvent.getDeltaY()<=0){
+                zoomDelta = 1/zoomDelta;
+            }
 
-    public void MousePressed(MouseEvent mouseEvent) {
-        MouseX = mouseEvent.getX();
-        MouseY = mouseEvent.getY();
+            Scale scale = new Scale();
+            scale.setX(BoardPane.getScaleX() * zoomDelta);
+            scale.setY(BoardPane.getScaleY() * zoomDelta);
+            scale.setPivotX(BoardPane.getScaleX());
+            scale.setPivotY(BoardPane.getScaleY());
+            BoardPane.getTransforms().add(scale);
 
-    }
 
-    public void MouseReleased(MouseEvent mouseEvent) {
-        dragging = false;
-        MouseY = mouseEvent.getY();
-        MouseX = mouseEvent.getX();
-        mouseEvent.consume();
+        }
     }
 }
