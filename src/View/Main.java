@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Screen;
@@ -30,10 +31,11 @@ import java.util.Optional;
 
 public class Main extends Application {
 
-    public static IModel model;
-    public  static MyViewModel viewModel;
-    public static MyViewController myViewController;
+//    public static IModel model;
+//    public  static MyViewModel viewModel;
+//    public static MyViewController myViewController;
     public static MediaPlayer startMusic;
+//    public static Parent root;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -56,10 +58,10 @@ public class Main extends Application {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
 
-        primaryStage.setX(bounds.getMinX());
-        primaryStage.setY(bounds.getMinY());
-        primaryStage.setWidth(bounds.getWidth());
-        primaryStage.setHeight(bounds.getHeight());
+//        primaryStage.setX(bounds.getMinX());
+//        primaryStage.setY(bounds.getMinY());
+//        primaryStage.setWidth(bounds.getWidth());
+//        primaryStage.setHeight(bounds.getHeight());
 
 //        StackPane root1 = new StackPane();
         root.setStyle(
@@ -71,14 +73,16 @@ public class Main extends Application {
 
 
 
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
 
 
-        model = new MyModel();
-        viewModel = new MyViewModel(model);
-        myViewController = fxmlLoader.getController();
+        IModel model = new MyModel();
+        MyViewModel viewModel = new MyViewModel(model);
+        MyViewController myViewController = fxmlLoader.getController();
         myViewController.setMyViewModel(viewModel);
+        viewModel.addObserver(myViewController);
+
 
 
 
@@ -101,11 +105,6 @@ public class Main extends Application {
     public void mute(){
         startMusic.setMute(true);
     }
-
-
-
-
-
 
 
     public static void main(String[] args) {

@@ -27,13 +27,13 @@ public class MyModel extends Observable implements IModel {
     Server solveServer;
     Position UserPosition;
     Position GoalPosition;
-    private boolean reachGoal;
+    private boolean reachEnd;
     private boolean serverRunning;
 
     public MyModel() {
         this.maze = null;
         this.solution = null;
-        this.reachGoal = false;
+        this.reachEnd = false;
         this.serverRunning = false;
         this.UserPosition = null;
         this.GoalPosition = null;
@@ -150,7 +150,8 @@ public class MyModel extends Observable implements IModel {
                 }
             });
             client.communicateWithServer();
-
+            setChanged();
+            notifyObservers("generateMaze");   //to check
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -215,6 +216,13 @@ public class MyModel extends Observable implements IModel {
                 }
                 break;
         }
+        if(this.UserPosition.equals(this.GoalPosition))
+            this.reachEnd = true;
+        else
+            this.reachEnd = false;
+        setChanged();
+        notifyObservers(direction);
+
     }
 
     private boolean isDiagonalAccessible(int currRow, int currCol, int totalRows, int totalCols, int diagonalNumber) {
@@ -294,30 +302,18 @@ public class MyModel extends Observable implements IModel {
     @Override
     public void setPlayerPosition(Position startPosition) {
         this.UserPosition = startPosition;
-/*        if (startPosition.equals(GoalPosition)) {
-            this.reachGoal = true;
-            setChanged();
-            notifyObservers("Finish");
-        } else {
-            this.reachGoal = false;
-            setChanged();
-            notifyObservers(startPosition);
-        }*/
-
     }
-
 
     public Solution getSolution() {
         return solution;
     }
 
-
-    public boolean isReachGoal() {
-        return reachGoal;
+    public boolean isReachedEnd() {
+        return reachEnd;
     }
 
-    public void setReachGoal(boolean reachGoal) {
-        this.reachGoal = reachGoal;
+    public void setReachEnd(boolean reachEnd) {
+        this.reachEnd = reachEnd;
     }
 
     @Override
@@ -410,5 +406,14 @@ public class MyModel extends Observable implements IModel {
         return getUserPosition().getColumnIndex();
     }
 
+    @Override
+    public int getRowEnd() {
+        return UserPosition.getRowIndex();
+    }
 
+    @Override
+    public int getColEnd() {
+        return UserPosition.getColumnIndex();
+
+    }
 }

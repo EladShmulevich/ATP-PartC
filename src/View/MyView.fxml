@@ -45,8 +45,8 @@
                   <font>
                      <Font size="13.0" />
                   </font></Label>
-                    <TextField fx:id="textField_mazeRows" text="50" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                    <TextField fx:id="textField_mazeColumns" text="50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <TextField fx:id="textField_mazeRows" text="10" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <TextField fx:id="textField_mazeColumns" text="10" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     <Button onAction="#generateMaze" prefHeight="25.0" prefWidth="167.0" text="Generate Maze" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                     <Button cancelButton="true" onAction="#solveMaze" prefHeight="25.0" prefWidth="167.0" text="Solve Maze" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                     <Label text="Player Row = " textFill="WHITE" GridPane.rowIndex="4">
@@ -139,9 +139,10 @@
         </VBox>
     </top>
     <center>
-        <Pane prefHeight="773.0" prefWidth="998.0" BorderPane.alignment="CENTER">
+        <Pane fx:id="BoardPane" minHeight="-Infinity" minWidth="-Infinity" onDragDetected="#DragDetected" onMousePressed="#MousePressed" onMouseReleased="#MouseReleased" onMouseDragged="#mouseDragged" prefHeight="773.0" prefWidth="998.0" BorderPane.alignment="CENTER">
             <children>
-                <MazeDisplayer fx:id="mazeDisplayer" height="400.0" imageFileNamePlayer="./resources/Player/GrandMaster-WizardCartman.transparent.png" imageFileNameWall="./resources/Background/wall.png" onKeyPressed="#keyPressed" width="400.0" />
+<!--                onMouseDragged="#mouseDragged" onScroll="#mouseScroll"-->
+                <MazeDisplayer fx:id="mazeDisplayer" onKeyPressed="#keyPressed" height="800.0" imageFileNamePlayer="./resources/Player/GrandMaster-WizardCartman.transparent.png" imageFileNameWall="./resources/Background/wall.png" imageFileNameGoal="./resources/Background/bomb.png" imageFileNameFinish="./resources/Background/great-job.png" width="800.0" />
             </children>
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

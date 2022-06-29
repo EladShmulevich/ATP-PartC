@@ -4,6 +4,7 @@ import Model.IModel;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -11,16 +12,66 @@ import java.util.Observer;
 public class MyViewModel extends Observable implements Observer {
 
     private IModel model;
+    private int rowPlayer;
+    private int colPlayer;
+    private int rowEnd;
+    private int colEnd;
+    private int startRow;
+    private int startCol;
+    private boolean isSolved;
+    int[][] mazeGrid;
+
+    Maze maze;
 
     public MyViewModel(IModel model) {
         this.model = model;
         this.model.assignObserver(this);
-        //lalalalalala
+        this.maze = null;
     }
 
     public void update(Observable o, Object arg) {
+        if (arg == "mazeFromFile"){
+            //*********get maze from file*********
+        }
+        else if(o instanceof IModel){
+            if(model.getMaze() == null){
+                this.mazeGrid = model.getGrid();
+            }
+            else{
+                Maze maze = model.getMaze();
+//                int[][] grid = model.getGrid();
+                if(maze == this.maze){
+                    int rowPlayer = model.getRowUser();
+                    int colPlayer = model.getColUser();
+                    int rowEnd = model.getRowEnd();
+                    int colEnd = model.getColEnd();
+                    boolean Solved = model.isReachedEnd();
+                    if(this.colPlayer == colPlayer && this.rowPlayer == rowPlayer){
+                        getSolution();
+                    }
+                    else {
+                        this.rowPlayer = rowPlayer;
+                        this.colPlayer = colPlayer;
+                        this.isSolved = Solved;
+
+                    }
+                }
+                else{
+                    this.maze = maze;
+                    startRow = model.getMaze().getStartPosition().getRowIndex();
+                    startCol = model.getMaze().getStartPosition().getColumnIndex();
+                    rowPlayer = model.getRowUser();
+                    colPlayer = model.getColUser();
+                    isSolved = model.isReachedEnd();
+                }
+            }
+        }
         setChanged();
-        notifyObservers();
+        notifyObservers(arg);
+    }
+
+    public Maze getmaze() {
+        return maze;
     }
 
     public int[][] getMaze() {
@@ -29,6 +80,14 @@ public class MyViewModel extends Observable implements Observer {
 
     public int getPlayerRow(){
         return model.getRowUser();
+    }
+
+    public int getEndRow(){
+        return model.getRowEnd();
+    }
+
+    public int getEndCol(){
+        return model.getColEnd();
     }
 
     public int getPlayerCol(){ return model.getColUser();}
@@ -47,9 +106,13 @@ public class MyViewModel extends Observable implements Observer {
         int direction;
         switch (keyEvent.getCode()){
             case NUMPAD8 -> direction = 1; //UP
+            case UP -> direction = 1;
             case NUMPAD2 -> direction = 2; //DOWN
+            case DOWN -> direction = 2;
             case NUMPAD6 -> direction = 3; //RIGHT;
+            case RIGHT -> direction = 3;
             case NUMPAD4 -> direction = 4; //LEFT
+            case LEFT -> direction = 4;
             case NUMPAD9 -> direction = 5; //UP_RIGHT
             case NUMPAD7 -> direction = 6; //UP_LEFT
             case NUMPAD3 -> direction = 7; //DOWN_RIGHT
@@ -63,9 +126,29 @@ public class MyViewModel extends Observable implements Observer {
         model.updatePlayerPositionKey(direction);
     }
 
-    public void solveMaze(){
-        this.model.solveMaze(model.getRowUser(),model.getColUser());
+    public void movePlayer(MouseEvent mouseEvent, double mouseX, double mouseY, double cellHeight, double cellWidth){
+        this.model.updatePlayerPositionMouse(mouseEvent, mouseX, mouseY, cellHeight, cellWidth);
     }
 
 
+    //to check
+    public void solveMaze(int currRow, int currCol){
+        this.model.solveMaze(model.getRowUser(),model.getColUser());
+    }
+
+    public boolean isSolved(){
+        return this.model.isReachedEnd();
+    }
+
+    public  void Exit(){
+        this.model.exit();
+    }
+
+    public int getStartRow() {
+        return startRow;
+    }
+
+    public int getStartCol() {
+        return startCol;
+    }
 }

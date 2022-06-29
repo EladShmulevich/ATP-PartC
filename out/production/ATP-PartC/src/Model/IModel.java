@@ -23,10 +23,13 @@ public interface IModel {
     public void loadMaze(Object file);
     public void exit();
     public Solution getSolution();
-
+    public boolean isReachedEnd();
     public Maze getMaze();
     public int[][] getGrid();
 
     int getRowUser();
     int getColUser();
+
+    int getRowEnd();
+    int getColEnd();
 }
