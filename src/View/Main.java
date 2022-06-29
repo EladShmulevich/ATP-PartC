@@ -31,17 +31,13 @@ import java.util.Optional;
 
 public class Main extends Application {
 
-//    public static IModel model;
-//    public  static MyViewModel viewModel;
-//    public static MyViewController myViewController;
     public static MediaPlayer startMusic;
-//    public static Parent root;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyView.fxml"));
         Parent root = fxmlLoader.load();
-        //Parent root = FXMLLoader.load(getClass().getResource("MyView.fxml"));
         primaryStage.setTitle("Maze App");
         Image image = new Image("/resources/Background/maze.png");
         primaryStage.getIcons().add(image);
@@ -49,7 +45,7 @@ public class Main extends Application {
         Media media = new Media(new File("resources/music/Star_Wars_Main_Theme_Song.mp3").toURI().toString());
         startMusic = new MediaPlayer(media);
         startMusic.setVolume(0.1);
-        startMusic.setAutoPlay(true);
+//        startMusic.setAutoPlay(true);
         startMusic.setCycleCount(MediaPlayer.INDEFINITE);
 
 
@@ -104,6 +100,8 @@ public class Main extends Application {
     public void mute(){
         startMusic.setMute(true);
     }
+
+
 
 
     public static void main(String[] args) {

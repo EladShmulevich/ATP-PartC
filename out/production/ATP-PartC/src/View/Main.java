@@ -49,7 +49,7 @@ public class Main extends Application {
         Media media = new Media(new File("resources/music/Star_Wars_Main_Theme_Song.mp3").toURI().toString());
         startMusic = new MediaPlayer(media);
         startMusic.setVolume(0.1);
-        startMusic.setAutoPlay(true);
+//        startMusic.setAutoPlay(true);
         startMusic.setCycleCount(MediaPlayer.INDEFINITE);
 
 
@@ -104,6 +104,8 @@ public class Main extends Application {
     public void mute(){
         startMusic.setMute(true);
     }
+
+
 
 
     public static void main(String[] args) {

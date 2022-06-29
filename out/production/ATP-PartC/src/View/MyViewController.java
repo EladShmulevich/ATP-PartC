@@ -6,10 +6,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -20,14 +24,14 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class MyViewController implements Initializable, IView, Observer {
@@ -36,6 +40,7 @@ public class MyViewController implements Initializable, IView, Observer {
     private boolean dragging = false;
     private double MouseX;
     private double MouseY;
+    Properties properties;
 
 
 
@@ -88,6 +93,14 @@ public class MyViewController implements Initializable, IView, Observer {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         playerRow.textProperty().bind(updatePlayerRow);
         playerCol.textProperty().bind(updatePlayerCol);
+
+        try{
+            properties = new Properties();
+            properties.load(new FileInputStream("./resources/config.properties"));
+        }
+        catch(Exception e){
+            System.out.println("Properties file not found");
+        }
     }
 
     public void generateMaze(ActionEvent actionEvent) {
@@ -112,16 +125,18 @@ public class MyViewController implements Initializable, IView, Observer {
         mazeDisplayer.widthProperty().bind(BoardPane.widthProperty());
         mazeDisplayer.heightProperty().bind(BoardPane.heightProperty());
 
-//        mazeDisplayer.drawMaze(myViewModel.getMaze());
 
         mazeDisplayer.drawMaze(myViewModel.getmaze());
-        //mazeDisplayer.drawMaze();
-//        mazeGenerated();
 
-        //logger.info("Generate Maze button pressed");
+        Main.startMusic.setAutoPlay(true);
+
 
     }
 
+
+    public Properties getProperties(){
+        return properties;
+    }
 
 
 
@@ -308,5 +323,108 @@ public class MyViewController implements Initializable, IView, Observer {
 
 
         }
+    }
+
+    public void enterPropWindow(ActionEvent actionEvent) {
+        Parent root;
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("View/FxmlProperties.fxml"));
+            Scene scene = BoardPane.getScene();
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Properties");
+            stage.setScene(new Scene(root, 390, 220));
+            Image image = new Image("resources/Background/settings.png");
+            stage.getIcons().add(image);
+
+
+            Screen screen = Screen.getPrimary();
+            Rectangle2D bounds = screen.getVisualBounds();
+
+            root.setStyle(
+                    "-fx-background-image: url(" +
+                            "'/resources/Background/cosmic.jpg'" +
+                            "); " +
+                            "-fx-background-size: cover;"
+            );
+
+
+
+            stage.show();
+            PropertiesController optionsController = fxmlLoader.getController();
+            optionsController.setMyViewController(this);
+            optionsController.setOptionStage(stage);
+            optionsController.setMazeChoiceBox();
+            optionsController.setSolveChoiceBox();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void saveMaze(ActionEvent actionEvent) {
+        
+    }
+
+    public void HelpClickHandler(ActionEvent actionEvent) {
+        Parent root;
+        try {
+            FXMLLoader fxmlLoader =new FXMLLoader(getClass().getClassLoader().getResource("View/Help.fxml"));
+            Scene myScene= BoardPane.getScene();
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Help");
+            stage.setScene(new Scene(root));
+
+            Screen screen = Screen.getPrimary();
+            Rectangle2D bounds = screen.getVisualBounds();
+
+            root.setStyle(
+                    "-fx-background-image: url(" +
+                            "'resources/Background/helpScreen.png'" +
+                            "); " +
+                            "-fx-background-size: cover;"
+            );
+
+
+
+            stage.show();
+//            PropertiesController helpController = fxmlLoader.getController();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void aboutClickHandler(ActionEvent actionEvent) {
+        Parent root;
+        try {
+            FXMLLoader fxmlLoader =new FXMLLoader(getClass().getClassLoader().getResource("View/Help.fxml"));
+            root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("About");
+            stage.setScene(new Scene(root));
+
+
+            Screen screen = Screen.getPrimary();
+            Rectangle2D bounds = screen.getVisualBounds();
+
+            root.setStyle(
+                    "-fx-background-image: url(" +
+                            "'resources/Background/helpScreen.png'" +
+                            "); " +
+                            "-fx-background-size: cover;"
+            );
+
+
+
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
