@@ -15,19 +15,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import javafx.scene.media.Media;
 import javafx.stage.WindowEvent;
-
-import javax.swing.text.View;
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.Optional;
+
 
 public class Main extends Application {
 
