@@ -38,9 +38,9 @@
             <ChoiceBox fx:id="MazechoiceBox" prefWidth="150.0" GridPane.columnIndex="1">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="MyMaze" />
-                        <String fx:value="Simple" />
-                        <String fx:value="Empty" />
+                        <String fx:value="MyMazeGenerator" />
+                        <String fx:value="SimpleMazeGenerator" />
+                        <String fx:value="EmptyMazeGenerator" />
                     </FXCollections>
                 </items>
 

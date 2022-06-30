@@ -4,6 +4,7 @@ import Client.Client;
 import Client.IClientStrategy;
 import IO.MyDecompressorInputStream;
 import Server.Server;
+import Server.Configurations;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
@@ -19,6 +20,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Observer;
+import java.util.Properties;
 
 public class MyModel extends Observable implements IModel {
     private Maze maze;
@@ -45,20 +47,24 @@ public class MyModel extends Observable implements IModel {
     }
 
 
-    @Override
-    public void startServers() {
-        this.mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
-        this.solveServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
-        this.mazeGeneratingServer.start();
-        this.solveServer.start();
-        this.serverRunning = true;
+
+    public void reStartServers() {
+        if(!serverRunning){
+            this.mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
+            this.solveServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
+            this.mazeGeneratingServer.start();
+            this.solveServer.start();
+            this.serverRunning = true;
+        }
     }
 
-    @Override
+
     public void stopServers() {
-        this.mazeGeneratingServer.stop();
-        this.solveServer.stop();
-        serverRunning = false;
+        if(serverRunning){
+            this.mazeGeneratingServer.stop();
+            this.solveServer.stop();
+            serverRunning = false;
+        }
     }
 
     @Override
@@ -90,6 +96,7 @@ public class MyModel extends Observable implements IModel {
             int finalRows = rows;
             int finalCols = cols;
             Client client = new Client(InetAddress.getLocalHost(), 5400, new IClientStrategy() {
+                @Override
                 public void clientStrategy(InputStream inFromServer, OutputStream outToServer) {
                     try {
                         ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
@@ -188,6 +195,7 @@ public class MyModel extends Observable implements IModel {
             this.reachEnd = true;
         else
             this.reachEnd = false;
+
         setChanged();
         notifyObservers(direction);
 
@@ -220,52 +228,6 @@ public class MyModel extends Observable implements IModel {
         }
         return false;
     }
-
-//    @Override
-//    public void updatePlayerPositionMouse(MouseEvent mouseEvent, double mouseX, double mouseY, double cellHeight, double cellWidth) {
-//        if (this.maze != null) {
-//            //DOWN
-//            if (mouseEvent.getY() > mouseY && Math.abs(mouseEvent.getY() - mouseY) >= cellHeight) {
-//                //DOWN-RIGHT
-//                if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-//                    updatePlayerPositionKey(7);
-//                }
-//                //DOWN-LEFT
-//                else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-//                    updatePlayerPositionKey(8);
-//                }
-//                //DOWN
-//                else {
-//                    updatePlayerPositionKey(2);
-//                }
-//                return;
-//            }
-//            //Checks RIGHT/LEFT
-//            else {
-//                if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-//                    updatePlayerPositionKey(3);
-//                } else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-//                    updatePlayerPositionKey(4);
-//                }
-//            }
-//        }
-//        //Checks UP
-//        else if (mouseEvent.getY() < mouseY && Math.abs(mouseEvent.getY() - mouseY) >= cellHeight) {
-//
-//            //UP-RIGHT
-//            if (mouseEvent.getX() > mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-//                updatePlayerPositionKey(5);
-//            }
-//            //UP-LEFT
-//            else if (mouseEvent.getX() < mouseX && Math.abs(mouseEvent.getX() - mouseX) >= cellWidth) {
-//                updatePlayerPositionKey(6);
-//            }
-//            //UP
-//            else {
-//                updatePlayerPositionKey(1);
-//            }
-//        }
-//    }
 
     @Override
     public void setPlayerPosition(Position startPosition) {
@@ -348,16 +310,40 @@ public class MyModel extends Observable implements IModel {
     }
 
     @Override
-    public void loadMaze(Object file) {
-        Maze loadedMaze = new Maze((byte[]) file);
-        setPlayerPosition(loadedMaze.getStartPosition());
-        setMaze(loadedMaze);
+    public void loadMaze(File file) {
+
+        try {
+            FileInputStream fileinStream = new FileInputStream(file);
+            ObjectInputStream fromfile = new ObjectInputStream(fileinStream);
+            byte[] mazeLoad = (byte[]) fromfile.readObject();
+            maze = new Maze(mazeLoad);
+            fromfile.close();
+            fileinStream.close();
+            setPlayerPosition(new Position(maze.getStartPosition().getRowIndex(), maze.getStartPosition().getColumnIndex()));
+            setGoalPosition(new Position(maze.getGoalPosition().getRowIndex(), maze.getGoalPosition().getColumnIndex()));
+            reachEnd =false;
+            setChanged();
+            notifyObservers("mazeFromFile");
+
+        } catch (Exception e) {
+            Alert a = new Alert((Alert.AlertType.ERROR));
+            a.setContentText("No compatible Maze was found");
+            a.show();
+        }
+
     }
 
     @Override
     public void exit() {
         stopServers();
     }
+
+    @Override
+    public void restart(){
+        reStartServers();
+    }
+
+
 
     public Position getUserPosition(){
         return this.UserPosition;
@@ -379,6 +365,20 @@ public class MyModel extends Observable implements IModel {
     @Override
     public int getColEnd() {
         return UserPosition.getColumnIndex();
+
+    }
+
+    public void refreshStrategies(){
+        try{
+            Properties prop = new Properties();
+            prop.load(new FileInputStream("resources/config.properties"));
+            Configurations.getInstance();
+            Configurations.setProperties(prop);
+            mazeGeneratingServer.setStrategy(new ServerStrategyGenerateMaze());
+            solveServer.setStrategy(new ServerStrategySolveSearchProblem());
+        } catch (IOException e) {
+            System.out.println("");
+        }
 
     }
 }

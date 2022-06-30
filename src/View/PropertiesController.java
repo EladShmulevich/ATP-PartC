@@ -3,6 +3,7 @@ package View;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -38,8 +39,18 @@ public class PropertiesController {
         myViewController.getProperties();
         System.out.println(myViewController.getProperties().getProperty("mazeSearchingAlgorithm"));
         myViewController.getProperties().store(new FileWriter("resources/config.properties"), "store to properties file");
+        myViewController.newMaze();
+
+        showAlert("Properties Changed");
         OptionsStage.close();
 
+
+    }
+
+    public void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText(message);
+        alert.show();
     }
 
     public void setMazeChoiceBox() {
@@ -47,6 +58,6 @@ public class PropertiesController {
     }
 
     public void setSolveChoiceBox() {
-        SolvechoiceBox.valueProperty().setValue(myViewController.getProperties().getProperty("MazeSolver", "BestFS"));
+        SolvechoiceBox.valueProperty().setValue(myViewController.getProperties().getProperty("MazeSolver", "BestFirstSearch"));
     }
 }

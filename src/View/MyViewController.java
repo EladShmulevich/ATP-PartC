@@ -35,14 +35,10 @@ public class MyViewController implements Initializable, IView, Observer {
     private MyViewModel myViewModel;
     private Maze maze;
     private boolean dragging = false;
-    private double MouseX;
-    private double MouseY;
+    private boolean propertiesChanged = false;
     Properties properties;
 
 
-
-    @FXML
-    public Pane pane;
     @FXML
     public TextField textField_mazeRows;
     @FXML
@@ -56,10 +52,10 @@ public class MyViewController implements Initializable, IView, Observer {
     @FXML
     public Pane BoardPane;
     @FXML
-    public Button generateMaze;
+
 
     private final FileChooser fileChooser = new FileChooser();
-    private MediaPlayer mediaPlayer; //Media player
+    private static MediaPlayer mediaPlayer = new MediaPlayer(new Media(new File("resources/music/Single-footstep.mp3").toURI().toString())); //Media player
 
 
     StringProperty updatePlayerRow = new SimpleStringProperty();
@@ -82,12 +78,10 @@ public class MyViewController implements Initializable, IView, Observer {
         this.updatePlayerCol.set(updatePlayerCol + "");
     }
 
-
     public void setMyViewModel(MyViewModel myViewModel) {
         this.myViewModel = myViewModel;
 //        this.myViewModel.addObserver(this);
     }
-
 
 
     @Override
@@ -106,16 +100,18 @@ public class MyViewController implements Initializable, IView, Observer {
 
     public void generateMaze(ActionEvent actionEvent) {
 
+        if(propertiesChanged){
+            myViewModel.refreshProperties();
+            propertiesChanged=false;
+        }
         if (!textField_mazeRows.getText().matches("\\d*")) {
             textField_mazeRows.setText("10");
             popAlert("Error", "Numbers Only!");
         }
-
         if (!textField_mazeColumns.getText().matches("\\d*")) {
             textField_mazeColumns.setText("10");
             popAlert("Error", "Numbers Only!");
         }
-
         int rows = Integer.parseInt(textField_mazeRows.getText());
         int cols = Integer.parseInt(textField_mazeColumns.getText());
 
@@ -130,40 +126,12 @@ public class MyViewController implements Initializable, IView, Observer {
         mazeDisplayer.drawMaze(myViewModel.getmaze());
 
         Main.startMusic.setAutoPlay(true);
-
-
-    }
-
-
-    public void generateMaze() {
-
-        if (!textField_mazeRows.getText().matches("\\d*")) {
-            textField_mazeRows.setText("10");
-            popAlert("Error", "Numbers Only!");
-        }
-
-        if (!textField_mazeColumns.getText().matches("\\d*")) {
-            textField_mazeColumns.setText("10");
-            popAlert("Error", "Numbers Only!");
-        }
-
-        int rows = Integer.parseInt(textField_mazeRows.getText());
-        int cols = Integer.parseInt(textField_mazeColumns.getText());
-
-        myViewModel.generateMaze(rows, cols);
-
-        mazeDisplayer.setRoundFirst(true);
         mazeDisplayer.requestFocus();
-        mazeDisplayer.widthProperty().bind(BoardPane.widthProperty());
-        mazeDisplayer.heightProperty().bind(BoardPane.heightProperty());
-
-
-        mazeDisplayer.drawMaze(myViewModel.getmaze());
-
-        Main.startMusic.setAutoPlay(true);
 
 
     }
+
+
 
 
     public Properties getProperties(){
@@ -177,33 +145,22 @@ public class MyViewController implements Initializable, IView, Observer {
             {
             popAlert("Error", "No maze to solve!");}
         else{
-            popAlert("Solve", "Solving maze...");
+//            popAlert("Solve", "Solving maze...");
 
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setContentText("Solving maze...");
-//            alert.show();
             myViewModel.solveMaze(mazeDisplayer.getPlayerRow(), mazeDisplayer.getPlayerCol());
             mazeDisplayer.setSolution(myViewModel.getSolution());
         }
-
-
-//        mazeDisplayer.ShowSolution(myViewModel.getSolution());
+        mazeDisplayer.requestFocus();
     }
 
-    public void openFile(ActionEvent actionEvent) {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Open maze");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Maze files (*.maze)", "*.maze"));
-        fc.setInitialDirectory(new File("./resources"));
-        File chosen = fc.showOpenDialog(null);
-        //...
 
-
-    }
 
     public void keyPressed(KeyEvent keyEvent) {
-        myViewModel.movePlayer(keyEvent);
-        keyEvent.consume();
+        if(myViewModel.getmaze() != null){
+            myViewModel.movePlayer(keyEvent);
+            keyEvent.consume();
+        }
+
     }
 
     public void setPlayerPosition(int row, int col) {
@@ -219,6 +176,17 @@ public class MyViewController implements Initializable, IView, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        if("mazeFromFile".equals(arg)){
+            maze = myViewModel.getmaze();
+            setUpdatePlayerRow(maze.getStartPosition().getRowIndex());
+            setUpdatePlayerCol(maze.getStartPosition().getColumnIndex());
+            mazeDisplayer.setPlayerPosition(myViewModel.getPlayerRow(), myViewModel.getPlayerCol());
+            mazeDisplayer.setGoalPosition(myViewModel.getEndRow(), myViewModel.getEndCol());
+            mazeDisplayer.drawMaze(maze);
+            mazeDisplayer.drawFinished(myViewModel.isSolved());
+        }
+
+
         if ("generateMaze".equals(arg)) {
             int StartRow = myViewModel.getStartRow();
             int StartCol = myViewModel.getStartCol();
@@ -308,10 +276,16 @@ public class MyViewController implements Initializable, IView, Observer {
 
     public void play(ActionEvent actionEvent) {
         Main.startMusic.setMute(false);
+        mediaPlayer.setMute(false);
+        mazeDisplayer.requestFocus();
+
+
     }
 
     public void mute(ActionEvent actionEvent) {
         Main.startMusic.setMute(true);
+        mediaPlayer.setMute(true);
+        mazeDisplayer.requestFocus();
     }
 
     public void exit() {
@@ -325,14 +299,18 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
     public void mouseDragged(MouseEvent mouseEvent) {
-        int rows = myViewModel.getmaze().getMaze().length;
-        int cols = myViewModel.getmaze().getMaze()[0].length;
-        if(myViewModel.getmaze() != null) {
-            int Size = Math.max(rows,cols);
-            MouseX = mouseDragHandler(Size, mazeDisplayer.getHeight(), rows, mouseEvent.getX(), mazeDisplayer.getWidth() /Size);
-            MouseY = mouseDragHandler(Size, mazeDisplayer.getWidth(), cols, mouseEvent.getY(), mazeDisplayer.getHeight() /Size);
-            myViewModel.movePlayer(MouseX, MouseY);
+        if(myViewModel.getmaze() != null){
+            int rows = myViewModel.getmaze().getMaze().length;
+            int cols = myViewModel.getmaze().getMaze()[0].length;
+            if(myViewModel.getmaze() != null) {
+                int Size = Math.max(rows,cols);
+                double mouseX = mouseDragHandler(Size, mazeDisplayer.getHeight(), rows, mouseEvent.getX(), mazeDisplayer.getWidth() / Size);
+                double mouseY = mouseDragHandler(Size, mazeDisplayer.getWidth(), cols, mouseEvent.getY(), mazeDisplayer.getHeight() / Size);
+                myViewModel.movePlayer(mouseX, mouseY);
+                mediaPlayer.play();
+            }
         }
+
     }
 
     private  double mouseDragHandler(int PaneSize, double canvasSize, int mazeSize,double mouseEvent,double temp){
@@ -342,20 +320,20 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
     public void mouseScroll(ScrollEvent scrollEvent) {
-        if(scrollEvent.isControlDown()){
-            double zoomDelta = 1.25;
-            if(scrollEvent.getDeltaY()<=0){
-                zoomDelta = 1/zoomDelta;
+        if(myViewModel.getmaze() != null) {
+            if (scrollEvent.isControlDown()) {
+                double zoomDelta = 1.25;
+                if (scrollEvent.getDeltaY() <= 0) {
+                    zoomDelta = 1 / zoomDelta;
+                }
+
+                Scale scale = new Scale();
+                scale.setX(BoardPane.getScaleX() * zoomDelta);
+                scale.setY(BoardPane.getScaleY() * zoomDelta);
+                scale.setPivotX(BoardPane.getScaleX());
+                scale.setPivotY(BoardPane.getScaleY());
+                BoardPane.getTransforms().add(scale);
             }
-
-            Scale scale = new Scale();
-            scale.setX(BoardPane.getScaleX() * zoomDelta);
-            scale.setY(BoardPane.getScaleY() * zoomDelta);
-            scale.setPivotX(BoardPane.getScaleX());
-            scale.setPivotY(BoardPane.getScaleY());
-            BoardPane.getTransforms().add(scale);
-
-
         }
     }
 
@@ -390,6 +368,7 @@ public class MyViewController implements Initializable, IView, Observer {
             optionsController.setOptionStage(stage);
             optionsController.setMazeChoiceBox();
             optionsController.setSolveChoiceBox();
+            propertiesChanged = true;
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -398,16 +377,22 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
     public void saveMaze(ActionEvent actionEvent) {
-        Window stage = BoardPane.getScene().getWindow();
-        fileChooser.setTitle("Save Maze");
-        fileChooser.setInitialFileName("maze");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("textfile" , "*.txt"));
-        try{
-            File file = fileChooser.showSaveDialog(stage);
-            myViewModel.saveMaze(file);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if(myViewModel.getmaze() != null) {
+            Window stage = BoardPane.getScene().getWindow();
+            fileChooser.setTitle("Save Maze");
+            fileChooser.setInitialFileName("maze");
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("textfile" , "*.txt"));
+            try{
+                File file = fileChooser.showSaveDialog(stage);
+                myViewModel.saveMaze(file);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
+        else {
+            popAlert("Error", "You need to generate a maze first");
+        }
+
 
 
     }
@@ -476,8 +461,36 @@ public class MyViewController implements Initializable, IView, Observer {
     }
 
     public void NewMaze(ActionEvent actionEvent) {
-            Main.startMusic.setMute(true);
-            mazeDisplayer.getGraphicsContext2D().clearRect(0, 0, mazeDisplayer.getWidth(), mazeDisplayer.getHeight());
+        Main.startMusic.setMute(true);
+        mazeDisplayer.getGraphicsContext2D().clearRect(0, 0, mazeDisplayer.getWidth(), mazeDisplayer.getHeight());
+//        myViewModel.reStart();
+
+//            playerRow.requestFocus();
+//            textField_mazeRows.requestFocus();
+    }
+
+    public void newMaze() {
+        Main.startMusic.setMute(true);
+        mazeDisplayer.getGraphicsContext2D().clearRect(0, 0, mazeDisplayer.getWidth(), mazeDisplayer.getHeight());
+
+        if (propertiesChanged) {
+            myViewModel.refreshProperties();
+            propertiesChanged = false;
+        }
+
             playerRow.requestFocus();
-            textField_mazeRows.requestFocus();}
+            textField_mazeRows.requestFocus();
+        }
+
+
+        public void loadMazeHandler (ActionEvent actionEvent){
+            Window stage = BoardPane.getScene().getWindow();
+            fileChooser.setTitle("Load File");
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Documents", "*.docx", "*.txt", "*.pdf"));
+            File file = fileChooser.showOpenDialog(stage);
+            myViewModel.loadMaze(file);
+
+        }
+
 }

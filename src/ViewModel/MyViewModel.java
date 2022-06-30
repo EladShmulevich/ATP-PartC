@@ -33,6 +33,14 @@ public class MyViewModel extends Observable implements Observer {
 
     public void update(Observable o, Object arg) {
         if (arg == "mazeFromFile"){
+            rowPlayer = model.getRowUser();
+            colPlayer = model.getColUser();
+            rowEnd = model.getRowEnd();
+            colEnd = model.getColEnd();
+            isSolved = model.isReachedEnd();
+            maze = model.getMaze();
+            setChanged();
+            notifyObservers("mazeFromFile");
             //*********get maze from file*********
         }
         else if(o instanceof IModel){
@@ -104,12 +112,6 @@ public class MyViewModel extends Observable implements Observer {
 
 
     public void movePlayer(KeyEvent event) {
-//        KeyCode key = (KeyCode) o;
-//        if(key == null){
-//            KeyEvent ke = (KeyEvent) o;
-//            assert false;
-//            key = ke.getCode();
-//        }
         int direction;
         switch (event.getCode()){
             case NUMPAD8 -> direction = 1; //UP
@@ -159,9 +161,7 @@ public class MyViewModel extends Observable implements Observer {
         model.updatePlayerPositionKey(direction);
     }
 
-//    public void movePlayer(MouseEvent mouseEvent, double mouseX, double mouseY, double cellHeight, double cellWidth){
-//        this.model.updatePlayerPositionMouse(mouseEvent, mouseX, mouseY, cellHeight, cellWidth);
-//    }
+
 
     public void movePlayer(double mouseX, double mouseY){
         if ( mouseX == colPlayer && mouseY < rowPlayer )
@@ -198,4 +198,13 @@ public class MyViewModel extends Observable implements Observer {
     public void saveMaze(File fileName){
         this.model.saveMaze(fileName);
     }
+
+    public void loadMaze(File fileName){
+        this.model.loadMaze(fileName);
+    }
+
+    public void refreshProperties() {
+        model.refreshStrategies();
+    }
+
 }

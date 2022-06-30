@@ -33,7 +33,6 @@ public class Main extends Application {
 
     public static MediaPlayer startMusic;
 
-
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyView.fxml"));
@@ -94,14 +93,6 @@ public class Main extends Application {
 
 
     }
-
-
-
-    public void mute(){
-        startMusic.setMute(true);
-    }
-
-
 
 
     public static void main(String[] args) {

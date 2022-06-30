@@ -3,7 +3,6 @@ package Model;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
-import javafx.scene.input.MouseEvent;
 
 import java.io.File;
 import java.util.Observer;
@@ -16,11 +15,14 @@ public interface IModel {
     void setGoalPosition(Position endPosition);
     public void assignObserver(Observer o);
 
-    public void stopServers();
-    public void startServers();
+//    public void stopServers();
+//    public void reStartServers();
+
     public void saveMaze(File saveFile);
-    public void loadMaze(Object file);
+    public void loadMaze(File file);
     public void exit();
+    public void restart();
+
     public Solution getSolution();
     public boolean isReachedEnd();
     public Maze getMaze();
@@ -31,4 +33,5 @@ public interface IModel {
 
     int getRowEnd();
     int getColEnd();
+    public void refreshStrategies();
 }

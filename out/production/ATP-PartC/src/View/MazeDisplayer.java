@@ -5,12 +5,19 @@ import algorithms.search.AState;
 import algorithms.search.Solution;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -164,8 +171,14 @@ public class MazeDisplayer extends Canvas {
             }
 
             if(endGame && finishImage != null) {
+                double wCanvas = graphicsContext.getCanvas().getWidth();
+                double hCanvas = graphicsContext.getCanvas().getHeight();
+                double hImage = finishImage.getHeight();
+                double wImage = finishImage.getWidth();
 
-                graphicsContext.drawImage(finishImage,  graphicsContext.getCanvas().getWidth()/4,graphicsContext.getCanvas().getHeight()/4,  550, 550);
+//                graphicsContext.drawImage(finishImage,  (wCanvas/2 - wImage/2)/2,(hCanvas/2 - hImage/2)/2,  400, 400);
+                graphicsContext.drawImage(finishImage,  50,50,  600, 600);
+
 
             }
             if(solution != null)
@@ -283,5 +296,6 @@ public class MazeDisplayer extends Canvas {
     public void setRoundFirst(boolean roundFirst) {
         this.roundFirst = roundFirst;
     }
+
 
 }

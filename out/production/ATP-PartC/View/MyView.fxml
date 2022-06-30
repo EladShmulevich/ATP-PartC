@@ -45,8 +45,8 @@
                   <font>
                      <Font size="13.0" />
                   </font></Label>
-                    <TextField fx:id="textField_mazeRows" text="10" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                    <TextField fx:id="textField_mazeColumns" text="7" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <TextField fx:id="textField_mazeRows" text="15" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <TextField fx:id="textField_mazeColumns" text="15" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     <Button onAction="#generateMaze" prefHeight="25.0" prefWidth="167.0" text="Generate Maze" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                     <Button cancelButton="true" onAction="#solveMaze" prefHeight="25.0" prefWidth="167.0" text="Solve Maze" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                     <Label text="Player Row = " textFill="WHITE" GridPane.rowIndex="4">
@@ -125,7 +125,7 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#openFile" text="Load" />
+                                <MenuItem mnemonicParsing="false" onAction="#loadMazeHandler" text="Load" />
                                 <MenuItem mnemonicParsing="false" onAction="#saveMaze" text="Save" />
                         <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
                         <MenuItem mnemonicParsing="false" onAction="#NewMaze" text="New" />
